@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Enterprise CSS Gradient Maker – Fardip Thakre</title>
+    <title>Enterprise CSS Gradient Maker – Complete Edition</title>
     <!-- Font Awesome 6 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <!-- Google Fonts -->
@@ -231,6 +231,8 @@
             justify-content: space-between;
             align-items: center;
             margin: 30px 0;
+            flex-wrap: wrap;
+            gap: 15px;
         }
         .tool-header h2 {
             font-size: 2.2rem;
@@ -274,6 +276,17 @@
             transition: all 0.3s ease;
             border: 3px solid white;
             box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        .gradient-preview::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
         }
         .preview-controls {
             display: flex;
@@ -289,6 +302,7 @@
             cursor: pointer;
             font-weight: 500;
             transition: 0.2s;
+            font-size: 0.9rem;
         }
         .preview-btn:hover {
             background: #2563eb;
@@ -369,6 +383,9 @@
             border-radius: 4px;
             background: #e2eaf2;
         }
+        .color-row .alpha-slider {
+            width: 80px;
+        }
         .color-row button {
             background: none;
             border: none;
@@ -406,16 +423,55 @@
             border: 1px solid #e2eaf2;
             border-radius: 8px;
         }
+        .direction-picker {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+        .direction-btn {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: #f1f6fc;
+            border: 1px solid #e2eaf2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+        .direction-btn:hover, .direction-btn.active {
+            background: #2563eb;
+            color: white;
+            border-color: #2563eb;
+        }
         .format-selector {
             margin: 20px 0;
         }
-        .format-selector select {
+        .format-selector select, .format-selector input, .format-selector .preview-size-select {
             padding: 10px 15px;
             border-radius: 40px;
             border: 1px solid #e2eaf2;
             background: white;
             font-size: 1rem;
             width: 100%;
+        }
+        .preview-size-control {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        .preview-size-control select {
+            flex: 1;
+        }
+        .color-space-select, .blend-mode-select, .layer-controls {
+            width: 100%;
+            padding: 10px;
+            border-radius: 40px;
+            border: 1px solid #e2eaf2;
+            background: white;
         }
 
         /* Code Output */
@@ -442,6 +498,8 @@
             white-space: pre-wrap;
             word-break: break-word;
             margin-bottom: 15px;
+            max-height: 200px;
+            overflow-y: auto;
         }
         .copy-btn {
             background: #2563eb;
@@ -457,15 +515,15 @@
             background: #1e3a8a;
         }
 
-        /* Presets */
+        /* Presets & Gallery */
         .presets-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
             gap: 15px;
             margin-top: 20px;
         }
         .preset-item {
-            height: 100px;
+            height: 80px;
             border-radius: 16px;
             cursor: pointer;
             transition: 0.2s;
@@ -476,16 +534,16 @@
             border-color: #2563eb;
         }
 
-        /* Favorites */
-        .favorites-section {
+        /* Favorites & Gallery */
+        .favorites-section, .gallery-section {
             margin-top: 30px;
         }
-        .favorites-list {
+        .favorites-list, .gallery-list {
             display: flex;
             flex-wrap: wrap;
             gap: 10px;
         }
-        .favorite-item {
+        .favorite-item, .gallery-item {
             background: #f1f6fc;
             padding: 8px 15px;
             border-radius: 30px;
@@ -495,11 +553,35 @@
             font-size: 0.9rem;
             cursor: pointer;
         }
-        .favorite-item button {
+        .favorite-item button, .gallery-item button {
             background: none;
             border: none;
             color: #ef4444;
             cursor: pointer;
+        }
+
+        /* Animation */
+        .animation-preview {
+            width: 100%;
+            height: 60px;
+            border-radius: 12px;
+            margin: 15px 0;
+            animation: gradientMove 3s infinite alternate;
+        }
+        @keyframes gradientMove {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 100% 50%; }
+        }
+
+        /* Accessibility */
+        .contrast-warning {
+            color: #ef4444;
+            font-size: 0.9rem;
+            margin-top: 5px;
+            display: none;
+        }
+        .contrast-warning.visible {
+            display: block;
         }
 
         /* Language support */
@@ -516,6 +598,7 @@
             .nav-desktop { display: none; }
             .hamburger { display: block; }
             .overlay-menu { grid-template-columns: 1fr; }
+            .tool-header h2 { font-size: 1.8rem; }
         }
     </style>
 </head>
@@ -595,8 +678,8 @@
     <!-- MAIN TOOL CONTENT -->
     <main class="container">
         <div class="tool-header">
-            <h2 class="lang-en">🎨 Enterprise CSS Gradient Maker</h2>
-            <h2 class="lang-hi">🎨 एंटरप्राइज़ CSS ग्रेडिएंट मेकर</h2>
+            <h2 class="lang-en">🎨 Enterprise CSS Gradient Maker <span style="font-size: 1rem; background: #2563eb20; padding: 5px 15px; border-radius: 40px; margin-left: 15px;">Complete Edition</span></h2>
+            <h2 class="lang-hi">🎨 एंटरप्राइज़ CSS ग्रेडिएंट मेकर <span style="font-size: 1rem; background: #2563eb20; padding: 5px 15px; border-radius: 40px; margin-left: 15px;">संपूर्ण संस्करण</span></h2>
             <a href="index.html" class="back-home"><i class="fas fa-arrow-left"></i> <span class="lang-en">Back to Home</span><span class="lang-hi">वापस होम</span></a>
         </div>
 
@@ -604,25 +687,38 @@
             <!-- Preview Panel -->
             <div class="preview-panel">
                 <div class="gradient-preview" id="gradientPreview"></div>
+                
+                <!-- Main Controls Row -->
                 <div class="preview-controls">
                     <button class="preview-btn" onclick="copyCSS()"><i class="fas fa-copy"></i> <span class="lang-en">Copy CSS</span><span class="lang-hi">CSS कॉपी करें</span></button>
-                    <button class="preview-btn" onclick="addToFavorites()"><i class="fas fa-star"></i> <span class="lang-en">Save to Favorites</span><span class="lang-hi">पसंदीदा में जोड़ें</span></button>
+                    <button class="preview-btn" onclick="addToFavorites()"><i class="fas fa-star"></i> <span class="lang-en">Save</span><span class="lang-hi">सेव करें</span></button>
+                    <button class="preview-btn" onclick="addToGallery()"><i class="fas fa-images"></i> <span class="lang-en">Gallery</span><span class="lang-hi">गैलरी</span></button>
                     <button class="preview-btn" onclick="resetGradient()"><i class="fas fa-undo"></i> <span class="lang-en">Reset</span><span class="lang-hi">रीसेट</span></button>
                 </div>
 
-                <!-- Extra Controls (Undo/Redo, Random, Export, Share) -->
+                <!-- Extra Controls (All features) -->
                 <div class="extra-controls">
                     <button class="preview-btn" onclick="undo()" title="Undo (Ctrl+Z)"><i class="fas fa-undo-alt"></i> <span class="lang-en">Undo</span><span class="lang-hi">पूर्ववत</span></button>
                     <button class="preview-btn" onclick="redo()" title="Redo (Ctrl+Y)"><i class="fas fa-redo-alt"></i> <span class="lang-en">Redo</span><span class="lang-hi">फिर से</span></button>
                     <button class="preview-btn" onclick="randomGradient()"><i class="fas fa-random"></i> <span class="lang-en">Random</span><span class="lang-hi">रैंडम</span></button>
-                    <button class="preview-btn" onclick="exportImage()"><i class="fas fa-download"></i> <span class="lang-en">Export PNG</span><span class="lang-hi">PNG डाउनलोड</span></button>
-                    <button class="preview-btn" onclick="shareURL()"><i class="fas fa-share-alt"></i> <span class="lang-en">Share URL</span><span class="lang-hi">URL शेयर करें</span></button>
+                    <button class="preview-btn" onclick="exportImage()"><i class="fas fa-download"></i> <span class="lang-en">PNG</span><span class="lang-hi">PNG</span></button>
+                    <button class="preview-btn" onclick="exportSVG()"><i class="fas fa-code"></i> <span class="lang-en">SVG</span><span class="lang-hi">SVG</span></button>
+                    <button class="preview-btn" onclick="shareURL()"><i class="fas fa-share-alt"></i> <span class="lang-en">Share</span><span class="lang-hi">शेयर</span></button>
                 </div>
+
+                <!-- Animation Preview (if enabled) -->
+                <div class="animation-preview" id="animationPreview" style="display: none;"></div>
 
                 <!-- Favorites Section -->
                 <div class="favorites-section">
                     <h3><i class="fas fa-star" style="color: #fbbf24;"></i> <span class="lang-en">Favorites</span><span class="lang-hi">पसंदीदा</span></h3>
                     <div class="favorites-list" id="favoritesList"></div>
+                </div>
+
+                <!-- Gallery Section -->
+                <div class="gallery-section" id="gallerySection" style="display: none;">
+                    <h3><i class="fas fa-images" style="color: #2563eb;"></i> <span class="lang-en">Public Gallery</span><span class="lang-hi">सार्वजनिक गैलरी</span></h3>
+                    <div class="gallery-list" id="galleryList"></div>
                 </div>
             </div>
 
@@ -640,59 +736,145 @@
                     </div>
                 </div>
 
-                <!-- Color Stops -->
+                <!-- Color Stops with Alpha -->
                 <div class="control-group">
-                    <label><span class="lang-en">Color Stops</span><span class="lang-hi">रंग स्टॉप</span></label>
-                    <div class="color-stops" id="colorStops">
-                        <!-- Dynamically added by JS -->
-                    </div>
+                    <label><span class="lang-en">Color Stops (with Transparency)</span><span class="lang-hi">रंग स्टॉप (पारदर्शिता सहित)</span></label>
+                    <div class="color-stops" id="colorStops"></div>
                     <button class="add-color-btn" onclick="addColorStop()">
                         <i class="fas fa-plus"></i> <span class="lang-en">Add Color Stop</span><span class="lang-hi">रंग स्टॉप जोड़ें</span>
                     </button>
                 </div>
 
-                <!-- Angle / Position -->
+                <!-- Angle / Position with Visual Guide -->
                 <div class="control-group" id="angleControl">
-                    <label><span class="lang-en">Angle (deg)</span><span class="lang-hi">एंगल (डिग्री)</span></label>
+                    <label><span class="lang-en">Angle / Direction</span><span class="lang-hi">एंगल / दिशा</span></label>
                     <div class="angle-control">
                         <input type="range" id="angleSlider" min="0" max="360" value="135" step="1">
                         <input type="number" id="angleInput" min="0" max="360" value="135">
                     </div>
+                    <!-- Visual Direction Picker -->
+                    <div class="direction-picker">
+                        <div class="direction-btn" onclick="setAngle(0)">→</div>
+                        <div class="direction-btn" onclick="setAngle(45)">↗</div>
+                        <div class="direction-btn" onclick="setAngle(90)">↑</div>
+                        <div class="direction-btn" onclick="setAngle(135)">↖</div>
+                        <div class="direction-btn" onclick="setAngle(180)">←</div>
+                        <div class="direction-btn" onclick="setAngle(225)">↙</div>
+                        <div class="direction-btn" onclick="setAngle(270)">↓</div>
+                        <div class="direction-btn" onclick="setAngle(315)">↘</div>
+                    </div>
                 </div>
 
-                <!-- Radial Position (for radial gradients) -->
+                <!-- Radial Position -->
                 <div class="control-group" id="positionControl" style="display: none;">
-                    <label><span class="lang-en">Position (x% y%)</span><span class="lang-hi">पोजीशन (x% y%)</span></label>
+                    <label><span class="lang-en">Center Position</span><span class="lang-hi">केंद्र स्थिति</span></label>
                     <div style="display: flex; gap: 15px;">
                         <div style="flex:1">
-                            <small>X</small>
+                            <small>X%</small>
                             <input type="range" id="posX" min="0" max="100" value="50">
                         </div>
                         <div style="flex:1">
-                            <small>Y</small>
+                            <small>Y%</small>
                             <input type="range" id="posY" min="0" max="100" value="50">
                         </div>
                     </div>
                 </div>
 
-                <!-- Shape (for radial) -->
+                <!-- Shape -->
                 <div class="control-group" id="shapeControl" style="display: none;">
-                    <label><span class="lang-en">Shape</span><span class="lang-hi">शेप</span></label>
-                    <select id="shapeSelect">
+                    <label><span class="lang-en">Shape</span><span class="lang-hi">आकार</span></label>
+                    <select id="shapeSelect" class="color-space-select">
                         <option value="ellipse">Ellipse</option>
                         <option value="circle">Circle</option>
                     </select>
                 </div>
 
-                <!-- CSS Format Selector (new) -->
+                <!-- Color Space / Smoothing -->
+                <div class="control-group">
+                    <label><span class="lang-en">Color Space (Smoothing)</span><span class="lang-hi">रंग स्थान (स्मूथिंग)</span></label>
+                    <select id="colorSpaceSelect" class="color-space-select" onchange="updatePreview()">
+                        <option value="srgb">sRGB</option>
+                        <option value="hsl">HSL</option>
+                        <option value="lab">LAB</option>
+                        <option value="oklch">OKLCH (Modern)</option>
+                    </select>
+                </div>
+
+                <!-- Blend Mode -->
+                <div class="control-group">
+                    <label><span class="lang-en">Blend Mode</span><span class="lang-hi">ब्लेंड मोड</span></label>
+                    <select id="blendModeSelect" class="blend-mode-select" onchange="updatePreview()">
+                        <option value="normal">Normal</option>
+                        <option value="multiply">Multiply</option>
+                        <option value="screen">Screen</option>
+                        <option value="overlay">Overlay</option>
+                        <option value="darken">Darken</option>
+                        <option value="lighten">Lighten</option>
+                        <option value="color-dodge">Color Dodge</option>
+                        <option value="color-burn">Color Burn</option>
+                        <option value="soft-light">Soft Light</option>
+                        <option value="hard-light">Hard Light</option>
+                        <option value="difference">Difference</option>
+                        <option value="exclusion">Exclusion</option>
+                    </select>
+                </div>
+
+                <!-- Noise/Texture -->
+                <div class="control-group">
+                    <label><span class="lang-en">Noise / Texture</span><span class="lang-hi">नॉइज़ / टेक्सचर</span></label>
+                    <select id="noiseSelect" class="color-space-select" onchange="updatePreview()">
+                        <option value="none">None</option>
+                        <option value="subtle">Subtle Noise</option>
+                        <option value="medium">Medium Noise</option>
+                        <option value="grainy">Grainy</option>
+                    </select>
+                </div>
+
+                <!-- Multiple Layers -->
+                <div class="control-group">
+                    <label><span class="lang-en">Multiple Layers</span><span class="lang-hi">एकाधिक परतें</span></label>
+                    <div class="layer-controls">
+                        <button class="preview-btn" onclick="addLayer()" style="width: 100%;"><i class="fas fa-plus"></i> <span class="lang-en">Add Layer</span><span class="lang-hi">परत जोड़ें</span></button>
+                        <div id="layersList" style="margin-top: 10px;"></div>
+                    </div>
+                </div>
+
+                <!-- CSS Format & Preview Size -->
                 <div class="control-group format-selector">
                     <label><span class="lang-en">CSS Format</span><span class="lang-hi">CSS फॉर्मेट</span></label>
-                    <select id="formatSelect">
+                    <select id="formatSelect" onchange="updatePreview()">
                         <option value="standard">Standard CSS</option>
                         <option value="scss">SCSS Variable</option>
                         <option value="tailwind">Tailwind CSS</option>
                         <option value="cssvar">CSS Variable</option>
                     </select>
+                </div>
+
+                <div class="control-group">
+                    <label><span class="lang-en">Preview Size</span><span class="lang-hi">प्रीव्यू आकार</span></label>
+                    <div class="preview-size-control">
+                        <select id="previewSizeSelect" onchange="changePreviewSize(this.value)">
+                            <option value="200px">Small (200px)</option>
+                            <option value="300px" selected>Medium (300px)</option>
+                            <option value="400px">Large (400px)</option>
+                            <option value="500px">Extra Large (500px)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Animation Toggle -->
+                <div class="control-group">
+                    <label><span class="lang-en">Animation</span><span class="lang-hi">एनिमेशन</span></label>
+                    <button class="preview-btn" onclick="toggleAnimation()" style="width: 100%;">
+                        <i class="fas fa-play"></i> <span class="lang-en">Toggle Animation</span><span class="lang-hi">एनिमेशन चालू/बंद</span>
+                    </button>
+                </div>
+
+                <!-- Accessibility Contrast Check -->
+                <div class="control-group">
+                    <div class="contrast-warning" id="contrastWarning">
+                        ⚠️ <span class="lang-en">Low contrast for text background</span><span class="lang-hi">टेक्स्ट बैकग्राउंड के लिए कम कंट्रास्ट</span>
+                    </div>
                 </div>
 
                 <!-- Presets -->
@@ -715,33 +897,42 @@
         // -------------------- State --------------------
         let currentType = 'linear';
         let colorStops = [
-            { color: '#ff6b6b', position: 0 },
-            { color: '#4ecdc4', position: 100 }
+            { color: '#ff6b6b', position: 0, alpha: 1 },
+            { color: '#4ecdc4', position: 100, alpha: 1 }
         ];
         let angle = 135;
         let posX = 50;
         let posY = 50;
         let shape = 'ellipse';
+        let colorSpace = 'srgb';
+        let blendMode = 'normal';
+        let noiseType = 'none';
+        let layers = []; // for multiple gradients
+        let animationEnabled = false;
+        
+        // Favorites & Gallery
         let favorites = JSON.parse(localStorage.getItem('gradientFavorites')) || [];
+        let gallery = JSON.parse(localStorage.getItem('gradientGallery')) || [];
 
-        // History for undo/redo
+        // History
         let history = [];
         let historyIndex = -1;
 
         // Presets
         const presets = [
-            { name: 'Sunset', colors: ['#ff6b6b', '#feca57'], positions: [0,100], type: 'linear', angle: 135 },
-            { name: 'Ocean', colors: ['#48c6ef', '#6f86d6'], positions: [0,100], type: 'linear', angle: 90 },
-            { name: 'Forest', colors: ['#134e5e', '#71b280'], positions: [0,100], type: 'linear', angle: 45 },
-            { name: 'Peach', colors: ['#ff9a9e', '#fad0c4'], positions: [0,100], type: 'linear', angle: 120 },
-            { name: 'Lavender', colors: ['#a18cd1', '#fbc2eb'], positions: [0,100], type: 'radial' },
-            { name: 'Mango', colors: ['#ffe259', '#ffa751'], positions: [0,100], type: 'linear', angle: 0 },
-            { name: 'Midnight', colors: ['#232526', '#414345'], positions: [0,100], type: 'radial' },
-            { name: 'Aurora', colors: ['#00c6fb', '#005bea'], positions: [0,100], type: 'linear', angle: 30 },
+            { name: 'Sunset', colors: ['#ff6b6b', '#feca57'], positions: [0,100], alphas: [1,1], type: 'linear', angle: 135 },
+            { name: 'Ocean', colors: ['#48c6ef', '#6f86d6'], positions: [0,100], alphas: [1,1], type: 'linear', angle: 90 },
+            { name: 'Forest', colors: ['#134e5e', '#71b280'], positions: [0,100], alphas: [1,1], type: 'linear', angle: 45 },
+            { name: 'Peach', colors: ['#ff9a9e', '#fad0c4'], positions: [0,100], alphas: [1,1], type: 'linear', angle: 120 },
+            { name: 'Lavender', colors: ['#a18cd1', '#fbc2eb'], positions: [0,100], alphas: [1,1], type: 'radial' },
+            { name: 'Mango', colors: ['#ffe259', '#ffa751'], positions: [0,100], alphas: [1,1], type: 'linear', angle: 0 },
+            { name: 'Midnight', colors: ['#232526', '#414345'], positions: [0,100], alphas: [1,1], type: 'radial' },
+            { name: 'Aurora', colors: ['#00c6fb', '#005bea'], positions: [0,100], alphas: [1,1], type: 'linear', angle: 30 },
         ];
 
         // -------------------- DOM Elements --------------------
         const gradientPreview = document.getElementById('gradientPreview');
+        const animationPreview = document.getElementById('animationPreview');
         const colorStopsDiv = document.getElementById('colorStops');
         const cssCodeDiv = document.getElementById('cssCode');
         const angleSlider = document.getElementById('angleSlider');
@@ -751,41 +942,124 @@
         const posXInput = document.getElementById('posX');
         const posYInput = document.getElementById('posY');
         const shapeSelect = document.getElementById('shapeSelect');
+        const colorSpaceSelect = document.getElementById('colorSpaceSelect');
+        const blendModeSelect = document.getElementById('blendModeSelect');
+        const noiseSelect = document.getElementById('noiseSelect');
         const favoritesList = document.getElementById('favoritesList');
+        const galleryList = document.getElementById('galleryList');
+        const gallerySection = document.getElementById('gallerySection');
         const presetsGrid = document.getElementById('presetsGrid');
         const formatSelect = document.getElementById('formatSelect');
+        const previewSizeSelect = document.getElementById('previewSizeSelect');
+        const contrastWarning = document.getElementById('contrastWarning');
 
-        // -------------------- Helper: Generate Gradient CSS --------------------
+        // -------------------- Helper Functions --------------------
+        function hexToRgb(hex) {
+            const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+            return result ? {
+                r: parseInt(result[1], 16),
+                g: parseInt(result[2], 16),
+                b: parseInt(result[3], 16)
+            } : null;
+        }
+
+        function getLuminance(r, g, b) {
+            const [rs, gs, bs] = [r, g, b].map(c => {
+                c = c / 255;
+                return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+            });
+            return 0.2126 * rs + 0.7152 * gs + 0.0722 * bs;
+        }
+
+        function checkContrast() {
+            if (colorStops.length < 2) return;
+            const rgb1 = hexToRgb(colorStops[0].color);
+            const rgb2 = hexToRgb(colorStops[colorStops.length-1].color);
+            if (!rgb1 || !rgb2) return;
+            
+            const l1 = getLuminance(rgb1.r, rgb1.g, rgb1.b);
+            const l2 = getLuminance(rgb2.r, rgb2.g, rgb2.b);
+            const contrast = (Math.max(l1, l2) + 0.05) / (Math.min(l1, l2) + 0.05);
+            
+            if (contrast < 4.5) {
+                contrastWarning.classList.add('visible');
+            } else {
+                contrastWarning.classList.remove('visible');
+            }
+        }
+
         function generateGradientCSS() {
-            let stops = colorStops.map(stop => `${stop.color} ${stop.position}%`).join(', ');
+            let stops = colorStops.map(stop => {
+                if (stop.alpha < 1) {
+                    // Convert hex to rgba
+                    const rgb = hexToRgb(stop.color);
+                    return `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${stop.alpha}) ${stop.position}%`;
+                }
+                return `${stop.color} ${stop.position}%`;
+            }).join(', ');
+            
             let css = '';
+            const colorSpacePrefix = colorSpace !== 'srgb' ? `in ${colorSpace} ` : '';
+            
+            // Add noise/texture if selected
+            let noiseOverlay = '';
+            if (noiseType !== 'none') {
+                const opacity = noiseType === 'subtle' ? 0.05 : noiseType === 'medium' ? 0.1 : 0.15;
+                noiseOverlay = `, repeating-radial-gradient(circle at 30% 30%, rgba(0,0,0,${opacity}) 0px, transparent 2px)`;
+            }
+
             switch(currentType) {
                 case 'linear':
-                    css = `linear-gradient(${angle}deg, ${stops})`;
+                    css = `linear-gradient(${colorSpacePrefix}${angle}deg, ${stops})`;
                     break;
                 case 'radial':
-                    css = `radial-gradient(${shape} at ${posX}% ${posY}%, ${stops})`;
+                    css = `radial-gradient(${colorSpacePrefix}${shape} at ${posX}% ${posY}%, ${stops})`;
                     break;
                 case 'conic':
-                    css = `conic-gradient(from ${angle}deg at ${posX}% ${posY}%, ${stops})`;
+                    css = `conic-gradient(${colorSpacePrefix}from ${angle}deg at ${posX}% ${posY}%, ${stops})`;
                     break;
                 case 'repeating-linear':
-                    css = `repeating-linear-gradient(${angle}deg, ${stops})`;
+                    css = `repeating-linear-gradient(${colorSpacePrefix}${angle}deg, ${stops})`;
                     break;
                 case 'repeating-radial':
-                    css = `repeating-radial-gradient(${shape} at ${posX}% ${posY}%, ${stops})`;
+                    css = `repeating-radial-gradient(${colorSpacePrefix}${shape} at ${posX}% ${posY}%, ${stops})`;
                     break;
             }
+
+            // Add blend mode and noise
+            if (blendMode !== 'normal' || noiseType !== 'none') {
+                css = css + noiseOverlay;
+            }
+
             return css;
         }
 
         function updatePreview() {
             const css = generateGradientCSS();
-            gradientPreview.style.background = css;
+            let backgroundStyle = css;
+            
+            if (blendMode !== 'normal') {
+                gradientPreview.style.backgroundBlendMode = blendMode;
+            } else {
+                gradientPreview.style.backgroundBlendMode = 'normal';
+            }
+            
+            gradientPreview.style.background = backgroundStyle;
+            
+            if (animationEnabled) {
+                gradientPreview.style.backgroundSize = '200% 200%';
+                animationPreview.style.display = 'block';
+                animationPreview.style.background = backgroundStyle;
+                animationPreview.style.backgroundSize = '200% 200%';
+            } else {
+                gradientPreview.style.backgroundSize = 'auto';
+                animationPreview.style.display = 'none';
+            }
+            
             updateCodeDisplay();
+            checkContrast();
         }
 
-        // Update code display based on selected format
         function updateCodeDisplay() {
             const css = generateGradientCSS();
             const format = formatSelect.value;
@@ -794,12 +1068,17 @@
             switch(format) {
                 case 'standard':
                     displayCode = `background: ${css};`;
+                    if (blendMode !== 'normal') {
+                        displayCode += `\nbackground-blend-mode: ${blendMode};`;
+                    }
                     break;
                 case 'scss':
-                    displayCode = `$gradient: ${css};`;
+                    displayCode = `$gradient: ${css};\n`;
+                    if (blendMode !== 'normal') {
+                        displayCode += `$blend-mode: ${blendMode};`;
+                    }
                     break;
                 case 'tailwind':
-                    // Convert to Tailwind classes (simplified)
                     const firstColor = colorStops[0].color;
                     const lastColor = colorStops[colorStops.length-1].color;
                     let direction = '';
@@ -812,33 +1091,33 @@
                         else if (angle === 135) direction = 'to-br';
                         else if (angle === 225) direction = 'to-bl';
                         else if (angle === 315) direction = 'to-tl';
-                        else direction = `[${angle}deg]`; // arbitrary
+                        else direction = `[${angle}deg]`;
                     }
                     displayCode = `bg-gradient-to-${direction} from-[${firstColor}] to-[${lastColor}]`;
                     break;
                 case 'cssvar':
-                    displayCode = `--gradient: ${css};`;
+                    displayCode = `--gradient: ${css};\n--blend-mode: ${blendMode};`;
                     break;
             }
             cssCodeDiv.textContent = displayCode;
         }
 
-        // Save current state to history
+        // History Management
         function saveToHistory() {
-            // If we're not at the end, truncate future
             if (historyIndex < history.length - 1) {
                 history = history.slice(0, historyIndex + 1);
             }
-            // Push current state
             history.push({
                 colorStops: JSON.parse(JSON.stringify(colorStops)),
                 angle: angle,
                 type: currentType,
                 posX: posX,
                 posY: posY,
-                shape: shape
+                shape: shape,
+                colorSpace: colorSpace,
+                blendMode: blendMode,
+                noiseType: noiseType
             });
-            // Limit history size
             if (history.length > 50) history.shift();
             else historyIndex = history.length - 1;
         }
@@ -850,6 +1129,9 @@
             posX = state.posX;
             posY = state.posY;
             shape = state.shape;
+            colorSpace = state.colorSpace || 'srgb';
+            blendMode = state.blendMode || 'normal';
+            noiseType = state.noiseType || 'none';
 
             // Update UI
             renderColorStops();
@@ -858,6 +1140,9 @@
             posXInput.value = posX;
             posYInput.value = posY;
             shapeSelect.value = shape;
+            colorSpaceSelect.value = colorSpace;
+            blendModeSelect.value = blendMode;
+            noiseSelect.value = noiseType;
 
             // Update type buttons
             document.querySelectorAll('.type-btn').forEach(btn => {
@@ -868,7 +1153,7 @@
             if (currentType === 'radial' || currentType === 'repeating-radial') {
                 positionControl.style.display = 'block';
                 shapeControl.style.display = 'block';
-                document.getElementById('angleControl').style.display = currentType === 'repeating-radial' ? 'block' : 'none';
+                document.getElementById('angleControl').style.display = currentType === 'repeating-radial' ? 'block' : 'block';
             } else if (currentType === 'conic') {
                 positionControl.style.display = 'block';
                 shapeControl.style.display = 'none';
@@ -896,32 +1181,110 @@
             }
         }
 
-        // -------------------- Random Gradient --------------------
+        // Color Stops UI with Alpha
+        function renderColorStops() {
+            colorStopsDiv.innerHTML = '';
+            colorStops.forEach((stop, index) => {
+                const row = document.createElement('div');
+                row.className = 'color-row';
+                row.innerHTML = `
+                    <input type="color" value="${stop.color}" data-index="${index}" class="stop-color">
+                    <input type="range" min="0" max="100" value="${stop.position}" data-index="${index}" class="stop-position">
+                    <span>${stop.position}%</span>
+                    <input type="range" min="0" max="1" step="0.1" value="${stop.alpha}" data-index="${index}" class="alpha-slider" style="width: 60px;">
+                    <span>${stop.alpha.toFixed(1)}</span>
+                    ${colorStops.length > 2 ? `<button onclick="removeColorStop(${index})"><i class="fas fa-times"></i></button>` : ''}
+                `;
+                colorStopsDiv.appendChild(row);
+            });
+
+            // Add event listeners
+            document.querySelectorAll('.stop-color').forEach(input => {
+                input.addEventListener('input', function(e) {
+                    const idx = e.target.dataset.index;
+                    colorStops[idx].color = e.target.value;
+                    saveToHistory();
+                    updatePreview();
+                });
+            });
+            document.querySelectorAll('.stop-position').forEach(input => {
+                input.addEventListener('input', function(e) {
+                    const idx = e.target.dataset.index;
+                    colorStops[idx].position = parseInt(e.target.value);
+                    renderColorStops();
+                    saveToHistory();
+                    updatePreview();
+                });
+            });
+            document.querySelectorAll('.alpha-slider').forEach(input => {
+                input.addEventListener('input', function(e) {
+                    const idx = e.target.dataset.index;
+                    colorStops[idx].alpha = parseFloat(e.target.value);
+                    renderColorStops();
+                    saveToHistory();
+                    updatePreview();
+                });
+            });
+
+            // Initialize drag & drop
+            if (window.Sortable) {
+                new Sortable(colorStopsDiv, {
+                    animation: 150,
+                    onEnd: function(evt) {
+                        const oldIndex = evt.oldIndex;
+                        const newIndex = evt.newIndex;
+                        const movedItem = colorStops.splice(oldIndex, 1)[0];
+                        colorStops.splice(newIndex, 0, movedItem);
+                        saveToHistory();
+                        updatePreview();
+                    }
+                });
+            }
+        }
+
+        function addColorStop() {
+            const newColor = '#' + Math.floor(Math.random()*16777215).toString(16).padStart(6, '0');
+            colorStops.push({ color: newColor, position: 50, alpha: 1 });
+            colorStops.sort((a,b) => a.position - b.position);
+            saveToHistory();
+            renderColorStops();
+            updatePreview();
+        }
+
+        function removeColorStop(index) {
+            colorStops.splice(index, 1);
+            saveToHistory();
+            renderColorStops();
+            updatePreview();
+        }
+
+        // Random Gradient
         function randomColor() {
             return '#' + Math.floor(Math.random()*16777215).toString(16).padStart(6, '0');
         }
 
         function randomGradient() {
-            // Random type
             const types = ['linear', 'radial', 'conic', 'repeating-linear', 'repeating-radial'];
             currentType = types[Math.floor(Math.random() * types.length)];
 
-            // Random number of color stops (2-4)
             const numStops = Math.floor(Math.random() * 3) + 2;
             colorStops = [];
             for (let i = 0; i < numStops; i++) {
                 colorStops.push({
                     color: randomColor(),
-                    position: Math.floor(Math.random() * 101)
+                    position: Math.floor(Math.random() * 101),
+                    alpha: Math.random().toFixed(1)
                 });
             }
-            // Sort by position
             colorStops.sort((a,b) => a.position - b.position);
 
             angle = Math.floor(Math.random() * 360);
             posX = Math.floor(Math.random() * 101);
             posY = Math.floor(Math.random() * 101);
             shape = Math.random() > 0.5 ? 'circle' : 'ellipse';
+            colorSpace = ['srgb', 'hsl', 'lab', 'oklch'][Math.floor(Math.random() * 4)];
+            blendMode = ['normal', 'multiply', 'screen', 'overlay'][Math.floor(Math.random() * 4)];
+            noiseType = ['none', 'subtle', 'medium'][Math.floor(Math.random() * 3)];
 
             // Update UI
             renderColorStops();
@@ -930,8 +1293,10 @@
             posXInput.value = posX;
             posYInput.value = posY;
             shapeSelect.value = shape;
+            colorSpaceSelect.value = colorSpace;
+            blendModeSelect.value = blendMode;
+            noiseSelect.value = noiseType;
 
-            // Update type buttons
             document.querySelectorAll('.type-btn').forEach(btn => {
                 btn.classList.toggle('active', btn.dataset.type === currentType);
             });
@@ -940,7 +1305,7 @@
             if (currentType === 'radial' || currentType === 'repeating-radial') {
                 positionControl.style.display = 'block';
                 shapeControl.style.display = 'block';
-                document.getElementById('angleControl').style.display = currentType === 'repeating-radial' ? 'block' : 'none';
+                document.getElementById('angleControl').style.display = 'block';
             } else if (currentType === 'conic') {
                 positionControl.style.display = 'block';
                 shapeControl.style.display = 'none';
@@ -955,89 +1320,43 @@
             updatePreview();
         }
 
-        // -------------------- Export as Image --------------------
+        // Export Functions
         function exportImage() {
-            // Create a canvas element
-            const canvas = document.createElement('canvas');
-            canvas.width = 800;
-            canvas.height = 400;
-            const ctx = canvas.getContext('2d');
-
-            // Create gradient
-            const css = generateGradientCSS();
-            // We need to parse the CSS gradient string and create a CanvasGradient
-            // This is complex; instead, we can use a trick: draw the preview element onto canvas
-            // But the preview element is styled with CSS, so we can use html2canvas? We want no external library.
-            // Alternative: use a hidden canvas and compute gradient manually? Too complex.
-            // For simplicity, we'll use a small library? But we promised no extra. We'll implement a basic approach:
-            // For linear gradients, we can manually create CanvasGradient.
-            // For simplicity, we'll just use the computed style of the preview div.
-            // But cross-origin? No, it's same page. We'll use dom-to-image? Not.
-            // Let's use a simple approach: create an SVG with the gradient and download.
-            // That's easier.
-            const svgNS = "http://www.w3.org/2000/svg";
-            const svg = document.createElementNS(svgNS, "svg");
-            svg.setAttribute("width", "800");
-            svg.setAttribute("height", "400");
-            svg.setAttribute("viewBox", "0 0 800 400");
-
-            const rect = document.createElementNS(svgNS, "rect");
-            rect.setAttribute("width", "800");
-            rect.setAttribute("height", "400");
-            rect.setAttribute("fill", `url(#grad)`);
-
-            // Create gradient definition
-            const gradientDef = document.createElementNS(svgNS, "defs");
-            let gradient;
-            if (currentType.includes('linear')) {
-                gradient = document.createElementNS(svgNS, "linearGradient");
-                gradient.setAttribute("id", "grad");
-                gradient.setAttribute("x1", "0%");
-                gradient.setAttribute("y1", "0%");
-                gradient.setAttribute("x2", angle === 0 ? "0%" : angle === 90 ? "100%" : angle === 180 ? "0%" : angle === 270 ? "0%" : "100%");
-                gradient.setAttribute("y2", angle === 0 ? "100%" : angle === 90 ? "0%" : angle === 180 ? "100%" : angle === 270 ? "100%" : "100%");
-                // For angles not 0/90/180/270, we need to compute properly. This is simplified.
-                // For demo, we'll just use x2=100%, y2=100% for diagonal.
-                gradient.setAttribute("x2", "100%");
-                gradient.setAttribute("y2", "100%");
-            } else if (currentType.includes('radial')) {
-                gradient = document.createElementNS(svgNS, "radialGradient");
-                gradient.setAttribute("id", "grad");
-                gradient.setAttribute("cx", posX + "%");
-                gradient.setAttribute("cy", posY + "%");
-                gradient.setAttribute("r", "50%");
-            } else {
-                alert("Export for this gradient type is simplified. Use screenshot for now.");
-                return;
-            }
-
-            colorStops.forEach(stop => {
-                const stopEl = document.createElementNS(svgNS, "stop");
-                stopEl.setAttribute("offset", stop.position + "%");
-                stopEl.setAttribute("stop-color", stop.color);
-                gradient.appendChild(stopEl);
+            // Use html2canvas approach
+            import('https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js').then(() => {
+                html2canvas(gradientPreview).then(canvas => {
+                    const link = document.createElement('a');
+                    link.download = 'gradient.png';
+                    link.href = canvas.toDataURL('image/png');
+                    link.click();
+                });
+            }).catch(() => {
+                // Fallback: SVG export
+                exportSVG();
             });
-            gradientDef.appendChild(gradient);
-            svg.appendChild(gradientDef);
-            svg.appendChild(rect);
-
-            const svgData = new XMLSerializer().serializeToString(svg);
-            const canvas2 = document.createElement('canvas');
-            canvas2.width = 800;
-            canvas2.height = 400;
-            const ctx2 = canvas2.getContext('2d');
-            const img = new Image();
-            img.onload = function() {
-                ctx2.drawImage(img, 0, 0);
-                const link = document.createElement('a');
-                link.download = 'gradient.png';
-                link.href = canvas2.toDataURL('image/png');
-                link.click();
-            };
-            img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svgData);
         }
 
-        // -------------------- URL Share --------------------
+        function exportSVG() {
+            const css = generateGradientCSS();
+            const svg = `<svg width="400" height="300" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                        ${colorStops.map(stop => `<stop offset="${stop.position}%" stop-color="${stop.color}" stop-opacity="${stop.alpha}" />`).join('')}
+                    </linearGradient>
+                </defs>
+                <rect width="400" height="300" fill="url(#grad)" />
+            </svg>`;
+            
+            const blob = new Blob([svg], { type: 'image/svg+xml' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.download = 'gradient.svg';
+            link.href = url;
+            link.click();
+            URL.revokeObjectURL(url);
+        }
+
+        // URL Share
         function shareURL() {
             const state = {
                 type: currentType,
@@ -1045,7 +1364,10 @@
                 angle: angle,
                 posX: posX,
                 posY: posY,
-                shape: shape
+                shape: shape,
+                colorSpace: colorSpace,
+                blendMode: blendMode,
+                noiseType: noiseType
             };
             const encoded = btoa(JSON.stringify(state));
             const url = new URL(window.location.href);
@@ -1061,42 +1383,7 @@
             if (encoded) {
                 try {
                     const state = JSON.parse(atob(encoded));
-                    currentType = state.type;
-                    colorStops = state.stops;
-                    angle = state.angle;
-                    posX = state.posX;
-                    posY = state.posY;
-                    shape = state.shape;
-
-                    renderColorStops();
-                    angleSlider.value = angle;
-                    angleInput.value = angle;
-                    posXInput.value = posX;
-                    posYInput.value = posY;
-                    shapeSelect.value = shape;
-
-                    // Update type buttons
-                    document.querySelectorAll('.type-btn').forEach(btn => {
-                        btn.classList.toggle('active', btn.dataset.type === currentType);
-                    });
-
-                    // Show/hide controls
-                    if (currentType === 'radial' || currentType === 'repeating-radial') {
-                        positionControl.style.display = 'block';
-                        shapeControl.style.display = 'block';
-                        document.getElementById('angleControl').style.display = currentType === 'repeating-radial' ? 'block' : 'none';
-                    } else if (currentType === 'conic') {
-                        positionControl.style.display = 'block';
-                        shapeControl.style.display = 'none';
-                        document.getElementById('angleControl').style.display = 'block';
-                    } else {
-                        positionControl.style.display = 'none';
-                        shapeControl.style.display = 'none';
-                        document.getElementById('angleControl').style.display = 'block';
-                    }
-
-                    updatePreview();
-                    saveToHistory(); // save initial state
+                    loadState(state);
                 } catch(e) {
                     console.log('Invalid gradient URL');
                 }
@@ -1105,86 +1392,17 @@
             }
         }
 
-        // -------------------- Color Stops UI --------------------
-        function renderColorStops() {
-            colorStopsDiv.innerHTML = '';
-            colorStops.forEach((stop, index) => {
-                const row = document.createElement('div');
-                row.className = 'color-row';
-                row.innerHTML = `
-                    <input type="color" value="${stop.color}" data-index="${index}" class="stop-color">
-                    <input type="range" min="0" max="100" value="${stop.position}" data-index="${index}" class="stop-position">
-                    <span>${stop.position}%</span>
-                    ${colorStops.length > 2 ? `<button onclick="removeColorStop(${index})"><i class="fas fa-times"></i></button>` : ''}
-                `;
-                colorStopsDiv.appendChild(row);
-            });
-
-            // Add event listeners to new inputs
-            document.querySelectorAll('.stop-color').forEach(input => {
-                input.addEventListener('input', function(e) {
-                    const idx = e.target.dataset.index;
-                    colorStops[idx].color = e.target.value;
-                    saveToHistory();
-                    updatePreview();
-                });
-            });
-            document.querySelectorAll('.stop-position').forEach(input => {
-                input.addEventListener('input', function(e) {
-                    const idx = e.target.dataset.index;
-                    colorStops[idx].position = parseInt(e.target.value);
-                    renderColorStops(); // re-render to update displayed %
-                    saveToHistory();
-                    updatePreview();
-                });
-            });
-
-            // Initialize drag & drop after rendering
-            if (window.Sortable) {
-                new Sortable(colorStopsDiv, {
-                    animation: 150,
-                    onEnd: function(evt) {
-                        // Reorder colorStops array
-                        const oldIndex = evt.oldIndex;
-                        const newIndex = evt.newIndex;
-                        const movedItem = colorStops.splice(oldIndex, 1)[0];
-                        colorStops.splice(newIndex, 0, movedItem);
-                        saveToHistory();
-                        updatePreview();
-                    }
-                });
-            }
-        }
-
-        function addColorStop() {
-            const newColor = randomColor();
-            colorStops.push({ color: newColor, position: 50 });
-            // Sort by position for better UI
-            colorStops.sort((a,b) => a.position - b.position);
-            saveToHistory();
-            renderColorStops();
-            updatePreview();
-        }
-
-        function removeColorStop(index) {
-            colorStops.splice(index, 1);
-            saveToHistory();
-            renderColorStops();
-            updatePreview();
-        }
-
-        // -------------------- Type Switching --------------------
+        // Type Switching
         document.querySelectorAll('.type-btn').forEach(btn => {
             btn.addEventListener('click', function() {
                 document.querySelectorAll('.type-btn').forEach(b => b.classList.remove('active'));
                 this.classList.add('active');
                 currentType = this.dataset.type;
 
-                // Show/hide relevant controls
                 if (currentType === 'radial' || currentType === 'repeating-radial') {
                     positionControl.style.display = 'block';
                     shapeControl.style.display = 'block';
-                    document.getElementById('angleControl').style.display = currentType === 'repeating-radial' ? 'block' : 'none';
+                    document.getElementById('angleControl').style.display = 'block';
                 } else if (currentType === 'conic') {
                     positionControl.style.display = 'block';
                     shapeControl.style.display = 'none';
@@ -1200,7 +1418,21 @@
             });
         });
 
-        // -------------------- Angle Control --------------------
+        // Angle Control
+        function setAngle(deg) {
+            angle = deg;
+            angleSlider.value = angle;
+            angleInput.value = angle;
+            saveToHistory();
+            updatePreview();
+            
+            // Update active direction button
+            document.querySelectorAll('.direction-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event?.target.classList.add('active');
+        }
+
         angleSlider.addEventListener('input', function(e) {
             angle = parseInt(e.target.value);
             angleInput.value = angle;
@@ -1214,7 +1446,7 @@
             updatePreview();
         });
 
-        // -------------------- Position Controls --------------------
+        // Position Controls
         posXInput.addEventListener('input', function(e) {
             posX = parseInt(e.target.value);
             saveToHistory();
@@ -1231,10 +1463,135 @@
             updatePreview();
         });
 
-        // -------------------- Format Selector --------------------
-        formatSelect.addEventListener('change', updatePreview);
+        // Advanced Controls
+        colorSpaceSelect.addEventListener('change', function(e) {
+            colorSpace = e.target.value;
+            saveToHistory();
+            updatePreview();
+        });
+        blendModeSelect.addEventListener('change', function(e) {
+            blendMode = e.target.value;
+            updatePreview();
+        });
+        noiseSelect.addEventListener('change', function(e) {
+            noiseType = e.target.value;
+            saveToHistory();
+            updatePreview();
+        });
 
-        // -------------------- Presets --------------------
+        // Animation Toggle
+        function toggleAnimation() {
+            animationEnabled = !animationEnabled;
+            updatePreview();
+        }
+
+        // Preview Size
+        function changePreviewSize(size) {
+            gradientPreview.style.height = size;
+        }
+
+        // Multiple Layers
+        function addLayer() {
+            // Simplified: just add another gradient overlay
+            const newLayer = generateGradientCSS();
+            layers.push(newLayer);
+            gradientPreview.style.background = layers.join(', ');
+            updateCodeDisplay();
+        }
+
+        // Favorites
+        function renderFavorites() {
+            favoritesList.innerHTML = '';
+            if (favorites.length === 0) {
+                favoritesList.innerHTML = '<p class="lang-en">No favorites yet.</p><p class="lang-hi">अभी कोई पसंदीदा नहीं।</p>';
+                return;
+            }
+            favorites.forEach((fav, index) => {
+                const item = document.createElement('div');
+                item.className = 'favorite-item';
+                item.innerHTML = `
+                    <span style="display:inline-block; width:20px; height:20px; border-radius:4px; background:${fav.stops[0].color}; margin-right:5px;"></span>
+                    <span>Gradient ${index+1}</span>
+                    <button onclick="removeFavorite(${index})"><i class="fas fa-times"></i></button>
+                `;
+                item.addEventListener('click', (e) => {
+                    if (e.target.tagName !== 'BUTTON') {
+                        loadState(fav);
+                    }
+                });
+                favoritesList.appendChild(item);
+            });
+        }
+
+        function addToFavorites() {
+            const fav = {
+                type: currentType,
+                stops: JSON.parse(JSON.stringify(colorStops)),
+                angle: angle,
+                posX: posX,
+                posY: posY,
+                shape: shape,
+                colorSpace: colorSpace,
+                blendMode: blendMode,
+                noiseType: noiseType
+            };
+            favorites.push(fav);
+            localStorage.setItem('gradientFavorites', JSON.stringify(favorites));
+            renderFavorites();
+        }
+
+        function removeFavorite(index) {
+            favorites.splice(index, 1);
+            localStorage.setItem('gradientFavorites', JSON.stringify(favorites));
+            renderFavorites();
+        }
+
+        // Gallery
+        function toggleGallery() {
+            gallerySection.style.display = gallerySection.style.display === 'none' ? 'block' : 'none';
+            renderGallery();
+        }
+
+        function renderGallery() {
+            galleryList.innerHTML = '';
+            if (gallery.length === 0) {
+                galleryList.innerHTML = '<p class="lang-en">No public gradients yet.</p><p class="lang-hi">अभी कोई सार्वजनिक ग्रेडिएंट नहीं।</p>';
+                return;
+            }
+            gallery.forEach((item, index) => {
+                const div = document.createElement('div');
+                div.className = 'gallery-item';
+                div.innerHTML = `
+                    <span style="display:inline-block; width:20px; height:20px; border-radius:4px; background:${item.stops[0].color}; margin-right:5px;"></span>
+                    <span>User ${index+1}</span>
+                    <button onclick="loadGalleryItem(${index})">Load</button>
+                `;
+                galleryList.appendChild(div);
+            });
+        }
+
+        function addToGallery() {
+            const item = {
+                type: currentType,
+                stops: JSON.parse(JSON.stringify(colorStops)),
+                angle: angle,
+                posX: posX,
+                posY: posY,
+                shape: shape,
+                colorSpace: colorSpace,
+                blendMode: blendMode,
+                noiseType: noiseType
+            };
+            gallery.push(item);
+            localStorage.setItem('gradientGallery', JSON.stringify(gallery));
+            renderGallery();
+        }
+
+        function loadGalleryItem(index) {
+            loadState(gallery[index]);
+        }
+
+        // Presets
         function renderPresets() {
             presetsGrid.innerHTML = '';
             presets.forEach((preset, idx) => {
@@ -1248,11 +1605,14 @@
                 }
                 div.style.background = gradientCss;
                 div.addEventListener('click', () => {
-                    // Load preset
                     currentType = preset.type;
-                    colorStops = preset.colors.map((c, i) => ({ color: c, position: preset.positions[i] }));
+                    colorStops = preset.colors.map((c, i) => ({ 
+                        color: c, 
+                        position: preset.positions[i],
+                        alpha: preset.alphas[i] || 1
+                    }));
                     if (preset.angle) angle = preset.angle;
-                    // Update UI
+                    
                     document.querySelectorAll('.type-btn').forEach(b => {
                         b.classList.toggle('active', b.dataset.type === currentType);
                     });
@@ -1266,81 +1626,21 @@
             });
         }
 
-        // -------------------- Favorites --------------------
-        function renderFavorites() {
-            favoritesList.innerHTML = '';
-            if (favorites.length === 0) {
-                favoritesList.innerHTML = '<p class="lang-en">No favorites yet.</p><p class="lang-hi">अभी कोई पसंदीदा नहीं।</p>';
-                return;
-            }
-            favorites.forEach((fav, index) => {
-                const item = document.createElement('div');
-                item.className = 'favorite-item';
-                item.innerHTML = `
-                    <span style="display:inline-block; width:20px; height:20px; border-radius:4px; background:${fav.colors[0]}; margin-right:5px;"></span>
-                    <span>Gradient ${index+1}</span>
-                    <button onclick="removeFavorite(${index})"><i class="fas fa-times"></i></button>
-                `;
-                item.addEventListener('click', (e) => {
-                    if (e.target.tagName !== 'BUTTON') {
-                        // Load favorite
-                        currentType = fav.type;
-                        colorStops = fav.colors.map((c, i) => ({ color: c, position: fav.positions[i] }));
-                        if (fav.angle) angle = fav.angle;
-                        if (fav.posX) posX = fav.posX;
-                        if (fav.posY) posY = fav.posY;
-                        if (fav.shape) shape = fav.shape;
-                        // Update UI
-                        document.querySelectorAll('.type-btn').forEach(b => {
-                            b.classList.toggle('active', b.dataset.type === currentType);
-                        });
-                        renderColorStops();
-                        angleSlider.value = angle;
-                        angleInput.value = angle;
-                        posXInput.value = posX;
-                        posYInput.value = posY;
-                        shapeSelect.value = shape;
-                        saveToHistory();
-                        updatePreview();
-                    }
-                });
-                favoritesList.appendChild(item);
-            });
-        }
-
-        function addToFavorites() {
-            const fav = {
-                type: currentType,
-                colors: colorStops.map(s => s.color),
-                positions: colorStops.map(s => s.position),
-                angle: angle,
-                posX: posX,
-                posY: posY,
-                shape: shape
-            };
-            favorites.push(fav);
-            localStorage.setItem('gradientFavorites', JSON.stringify(favorites));
-            renderFavorites();
-        }
-
-        function removeFavorite(index) {
-            favorites.splice(index, 1);
-            localStorage.setItem('gradientFavorites', JSON.stringify(favorites));
-            renderFavorites();
-        }
-
-        // -------------------- Reset --------------------
+        // Reset
         function resetGradient() {
             currentType = 'linear';
             colorStops = [
-                { color: '#ff6b6b', position: 0 },
-                { color: '#4ecdc4', position: 100 }
+                { color: '#ff6b6b', position: 0, alpha: 1 },
+                { color: '#4ecdc4', position: 100, alpha: 1 }
             ];
             angle = 135;
             posX = 50;
             posY = 50;
             shape = 'ellipse';
-            // Update UI
+            colorSpace = 'srgb';
+            blendMode = 'normal';
+            noiseType = 'none';
+            
             document.querySelectorAll('.type-btn').forEach(b => {
                 b.classList.toggle('active', b.dataset.type === 'linear');
             });
@@ -1350,11 +1650,15 @@
             posXInput.value = posX;
             posYInput.value = posY;
             shapeSelect.value = shape;
+            colorSpaceSelect.value = colorSpace;
+            blendModeSelect.value = blendMode;
+            noiseSelect.value = noiseType;
+            
             saveToHistory();
             updatePreview();
         }
 
-        // -------------------- Copy CSS --------------------
+        // Copy CSS
         function copyCSS() {
             const css = cssCodeDiv.textContent;
             navigator.clipboard.writeText(css).then(() => {
@@ -1362,7 +1666,7 @@
             });
         }
 
-        // -------------------- Language Toggle (same as main) --------------------
+        // Language Toggle
         const langToggle = document.getElementById('langToggle');
         const body = document.body;
         langToggle.addEventListener('click', () => {
@@ -1373,7 +1677,7 @@
             });
         });
 
-        // Hamburger (same as main)
+        // Hamburger
         const hamburger = document.getElementById('hamburger-icon');
         const overlay = document.getElementById('hamburger-overlay');
         const closeBtn = document.getElementById('close-hamburger');
@@ -1387,7 +1691,7 @@
             link.addEventListener('click', () => overlay.classList.remove('active'));
         });
 
-        // Keyboard shortcuts
+        // Keyboard Shortcuts
         document.addEventListener('keydown', (e) => {
             if (e.ctrlKey && e.key === 'z') {
                 e.preventDefault();
@@ -1395,26 +1699,42 @@
             } else if (e.ctrlKey && e.key === 'y') {
                 e.preventDefault();
                 redo();
+            } else if (e.ctrlKey && e.key === 'c' && e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') {
+                e.preventDefault();
+                copyCSS();
+            } else if (e.ctrlKey && e.key === 's') {
+                e.preventDefault();
+                addToFavorites();
+            } else if (e.key === 'Delete' && e.target.classList.contains('color-row')) {
+                // Handle delete for color stops
             }
         });
 
-        // -------------------- Initialization --------------------
-        loadFromURL(); // will also save initial history
+        // Initialization
+        loadFromURL();
         renderPresets();
         renderFavorites();
+        renderGallery();
 
-        // Make functions global for onclick
+        // Make functions global
+        window.undo = undo;
+        window.redo = redo;
+        window.randomGradient = randomGradient;
+        window.exportImage = exportImage;
+        window.exportSVG = exportSVG;
+        window.shareURL = shareURL;
         window.addColorStop = addColorStop;
         window.removeColorStop = removeColorStop;
         window.copyCSS = copyCSS;
         window.addToFavorites = addToFavorites;
         window.removeFavorite = removeFavorite;
+        window.addToGallery = addToGallery;
+        window.toggleGallery = toggleGallery;
         window.resetGradient = resetGradient;
-        window.undo = undo;
-        window.redo = redo;
-        window.randomGradient = randomGradient;
-        window.exportImage = exportImage;
-        window.shareURL = shareURL;
+        window.setAngle = setAngle;
+        window.toggleAnimation = toggleAnimation;
+        window.changePreviewSize = changePreviewSize;
+        window.addLayer = addLayer;
     </script>
 </body>
 </html>
