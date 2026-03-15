@@ -87,6 +87,9 @@
     <div class="app">
         <!-- Header (unchanged) -->
         <header class="app-header">
+        <a href="index.html" class="header-btn" style="margin-left: auto; background-color: var(--accent-primary); color: white;">
+    <i class="fas fa-arrow-left"></i> Back to Blog
+</a>
             <div class="logo-area">
                 <i class="fas fa-code logo-icon"></i>
                 <span class="logo-text">SnippetForge</span>
@@ -300,7 +303,20 @@
             </div>
         </div>
     </div>
-
+<!-- User Profile Modal -->
+<div class="modal-overlay" id="userModal">
+    <div class="modal" style="max-width: 400px;">
+        <h3><i class="fas fa-user-circle"></i> User Profile</h3>
+        <div style="margin: 20px 0;">
+            <label style="display: block; margin-bottom: 8px; color: var(--text-secondary);">Username</label>
+            <input type="text" id="userNameInput" value="default" style="width: 100%;">
+        </div>
+        <div class="modal-actions">
+            <button id="userModalCancel">Cancel</button>
+            <button id="userModalSave" class="toolbar-button primary">Save</button>
+        </div>
+    </div>
+</div>
     <script>
         (function() {
             "use strict";
@@ -832,7 +848,51 @@
                     p.style.display = 'block';
                     setTimeout(() => p.style.display = 'none', 8000);
                 });
+// User profile button
+const userBtn = document.getElementById('userBtn');
+if (userBtn) {
+    userBtn.addEventListener('click', () => {
+        const userModal = document.getElementById('userModal');
+        const userNameInput = document.getElementById('userNameInput');
+        if (userModal && userNameInput) {
+            userNameInput.value = state.user;
+            userModal.style.display = 'flex';
+        } else {
+            utils.showToast('Profile modal not found', 'error');
+        }
+    });
+}
 
+// User modal handlers
+const cancelBtn = document.getElementById('userModalCancel');
+const saveBtn = document.getElementById('userModalSave');
+
+if (cancelBtn) {
+    cancelBtn.addEventListener('click', () => {
+        const userModal = document.getElementById('userModal');
+        if (userModal) userModal.style.display = 'none';
+    });
+}
+
+if (saveBtn) {
+    saveBtn.addEventListener('click', () => {
+        const userNameInput = document.getElementById('userNameInput');
+        const userModal = document.getElementById('userModal');
+        if (userNameInput && userModal) {
+            const newUser = userNameInput.value.trim();
+            if (newUser) {
+                state.user = newUser;
+                utils.saveToStorage('lastUser', newUser);
+                snippetManager.loadSnippets(); // reload snippets for new user
+                renderTagsAndLanguages();
+                renderCollectionsFilter();
+                renderSnippetList();
+                utils.showToast(`Switched to user: ${newUser}`, 'success');
+            }
+            userModal.style.display = 'none';
+        }
+    });
+}
                 // Live preview toggle
                 document.getElementById('livePreviewToggle').addEventListener('click', toggleLivePreview);
 
@@ -911,6 +971,7 @@
 
             init();
         })();
+        
     </script>
 </body>
 </html>
