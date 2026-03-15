@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=2.0, user-scalable=yes">
+    <title>SnippetForge Enterprise · Ultimate Edition</title>
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Highlight.js multiple themes -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css" id="highlight-theme">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <!-- Animate.css -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <!-- CodeMirror (advanced editor) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/theme/dracula.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/theme/material.min.css">
+    <!-- Handlebars (logic templates) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.7/handlebars.min.js"></script>
+    <!-- Chart.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <!-- Highlight.js core + languages -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/languages/python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/languages/javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/languages/java.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/languages/cpp.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/languages/csharp.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/languages/ruby.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/languages/go.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/languages/rust.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/languages/php.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/languages/html.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/languages/css.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/languages/sql.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/languages/bash.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/languages/typescript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/languages/swift.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/languages/kotlin.min.js"></script>
+    <!-- CodeMirror modes (load common ones) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/python/python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/javascript/javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/clike/clike.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/htmlmixed/htmlmixed.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/css/css.min.js"></script>
+    <style>
+        /* ---------- existing styles (condensed for brevity, but kept identical) ---------- */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root { --bg-primary: #0a0c0f; --bg-secondary: #1e2227; --bg-tertiary: #161b22; --bg-elevated: #2d333b; --bg-inset: #0d1117; --text-primary: #e1e4e8; --text-secondary: #8b949e; --text-muted: #6e7681; --text-accent: #58a6ff; --border-color: #30363d; --border-light: #3d444d; --accent-primary: #58a6ff; --accent-success: #238636; --accent-success-hover: #2ea043; --accent-danger: #f85149; --accent-warning: #f0883e; --accent-info: #79c0ff; --accent-purple: #b392f0; --shadow-sm: 0 2px 8px rgba(0,0,0,0.3); --shadow-md: 0 8px 24px rgba(0,0,0,0.5); --shadow-lg: 0 16px 32px rgba(0,0,0,0.6); --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; --font-mono: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace; --header-height: 70px; --sidebar-width: 320px; --transition-fast: 0.15s ease; --transition-normal: 0.25s ease; --border-radius-sm: 6px; --border-radius-md: 8px; --border-radius-lg: 12px; --border-radius-full: 9999px; }
+        body.light-mode { --bg-primary: #f6f8fa; --bg-secondary: #ffffff; --bg-tertiary: #f0f3f6; --bg-elevated: #e1e4e8; --bg-inset: #fafbfc; --text-primary: #24292e; --text-secondary: #57606a; --text-muted: #6e7681; --text-accent: #0969da; --border-color: #d0d7de; --border-light: #d8dee4; --accent-primary: #0969da; --accent-success: #1a7f37; --accent-success-hover: #2c974b; --accent-danger: #cf222e; --accent-warning: #bc4c00; --accent-info: #0969da; --accent-purple: #8250df; --shadow-sm: 0 2px 8px rgba(140,149,159,0.15); --shadow-md: 0 8px 24px rgba(140,149,159,0.2); }
+        body { background-color: var(--bg-primary); color: var(--text-primary); font-family: var(--font-sans); line-height: 1.5; transition: background-color var(--transition-normal), color var(--transition-normal); min-height: 100vh; overflow-x: hidden; }
+        ::-webkit-scrollbar { width: 10px; height: 10px; } ::-webkit-scrollbar-track { background: var(--bg-tertiary); border-radius: var(--border-radius-full); } ::-webkit-scrollbar-thumb { background: var(--bg-elevated); border-radius: var(--border-radius-full); border: 2px solid var(--bg-tertiary); } ::-webkit-scrollbar-thumb:hover { background: var(--accent-primary); }
+        .app { display: flex; flex-direction: column; height: 100vh; max-width: 100%; }
+        .app-header { height: var(--header-height); background-color: var(--bg-tertiary); border-bottom: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between; padding: 0 24px; position: sticky; top: 0; z-index: 100; box-shadow: var(--shadow-sm); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
+        .logo-area { display: flex; align-items: center; gap: 12px; } .logo-icon { font-size: 2.2rem; color: var(--accent-primary); filter: drop-shadow(0 2px 4px rgba(88,166,255,0.3)); } .logo-text { font-size: 1.8rem; font-weight: 700; background: linear-gradient(135deg, var(--accent-primary), var(--accent-purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: -0.5px; } .logo-badge { background: var(--accent-success); color: white; font-size: 0.7rem; font-weight: 600; padding: 2px 8px; border-radius: var(--border-radius-full); text-transform: uppercase; letter-spacing: 0.5px; }
+        .header-controls { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+        .header-btn { background-color: var(--bg-elevated); border: 1px solid var(--border-color); color: var(--text-primary); padding: 8px 16px; border-radius: var(--border-radius-full); font-size: 0.9rem; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: all var(--transition-fast); font-family: var(--font-sans); } .header-btn:hover { background-color: var(--bg-secondary); border-color: var(--accent-primary); transform: translateY(-2px); box-shadow: var(--shadow-sm); }
+        .header-select { background-color: var(--bg-elevated); border: 1px solid var(--border-color); color: var(--text-primary); padding: 8px 32px 8px 16px; border-radius: var(--border-radius-full); font-size: 0.9rem; cursor: pointer; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%238b949e' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; font-family: var(--font-sans); }
+        .app-main { display: flex; flex: 1; overflow: hidden; position: relative; }
+        .sidebar { width: var(--sidebar-width); background-color: var(--bg-secondary); border-right: 1px solid var(--border-color); display: flex; flex-direction: column; overflow: hidden; transition: width var(--transition-normal); position: relative; } .sidebar.collapsed { width: 60px; } .sidebar.collapsed .sidebar-header h3, .sidebar.collapsed .search-box, .sidebar.collapsed .filter-section, .sidebar.collapsed .snippet-item .snippet-language, .sidebar.collapsed .snippet-item .snippet-tags, .sidebar.collapsed .snippet-actions { display: none; } .sidebar.collapsed .snippet-item { padding: 12px 4px; text-align: center; } .sidebar.collapsed .snippet-item .snippet-name i { margin-right: 0; font-size: 1.2rem; }
+        .sidebar-header { padding: 16px; border-bottom: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between; } .sidebar-header h3 { font-size: 1.1rem; font-weight: 600; color: var(--text-secondary); display: flex; align-items: center; gap: 8px; } .sidebar-toggle { background: none; border: none; color: var(--text-secondary); cursor: pointer; font-size: 1.2rem; padding: 4px; border-radius: var(--border-radius-sm); transition: all var(--transition-fast); } .sidebar-toggle:hover { color: var(--accent-primary); background-color: var(--bg-elevated); }
+        .sidebar-content { flex: 1; overflow-y: auto; padding: 16px; }
+        .search-box { margin-bottom: 20px; position: relative; } .search-box i { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-muted); pointer-events: none; font-size: 0.9rem; } .search-box input { width: 100%; padding: 12px 16px 12px 42px; background-color: var(--bg-tertiary); border: 1px solid var(--border-color); border-radius: var(--border-radius-full); color: var(--text-primary); font-size: 0.95rem; transition: all var(--transition-fast); } .search-box input:focus { outline: none; border-color: var(--accent-primary); box-shadow: 0 0 0 3px rgba(88,166,255,0.3); }
+        .filter-section { margin-bottom: 24px; } .filter-title { font-size: 0.85rem; font-weight: 600; color: var(--text-secondary); margin-bottom: 10px; display: flex; align-items: center; gap: 6px; text-transform: uppercase; letter-spacing: 0.5px; } .filter-title i { font-size: 0.8rem; color: var(--accent-primary); } .tag-list { display: flex; flex-wrap: wrap; gap: 8px; } .tag { background-color: var(--bg-tertiary); border: 1px solid var(--border-color); border-radius: var(--border-radius-full); padding: 5px 12px; font-size: 0.8rem; cursor: pointer; transition: all var(--transition-fast); color: var(--text-secondary); user-select: none; } .tag:hover { background-color: var(--bg-elevated); border-color: var(--accent-primary); color: var(--text-primary); transform: translateY(-1px); } .tag.active { background-color: var(--accent-primary); border-color: var(--accent-primary); color: white; }
+        .snippet-list { display: flex; flex-direction: column; gap: 8px; } .snippet-item { background-color: var(--bg-tertiary); border: 1px solid var(--border-color); border-radius: var(--border-radius-md); padding: 14px; cursor: pointer; transition: all var(--transition-fast); position: relative; overflow: hidden; animation: fadeInUp 0.3s ease; } @keyframes fadeInUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } } .snippet-item:hover { border-color: var(--accent-primary); transform: translateY(-2px); box-shadow: var(--shadow-sm); background-color: var(--bg-elevated); } .snippet-item.selected { border-color: var(--accent-primary); background-color: var(--bg-elevated); box-shadow: 0 0 0 2px rgba(88,166,255,0.2); } .snippet-item .snippet-name { font-weight: 600; margin-bottom: 6px; display: flex; align-items: center; gap: 8px; font-size: 1rem; } .snippet-item .snippet-name i { color: var(--accent-primary); font-size: 1rem; width: 20px; text-align: center; } .snippet-item .snippet-language { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; } .snippet-item .snippet-tags { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; } .snippet-item .snippet-tags span { background-color: var(--bg-secondary); padding: 3px 8px; border-radius: var(--border-radius-sm); font-size: 0.65rem; color: var(--text-secondary); border: 1px solid var(--border-light); } .snippet-actions { position: absolute; top: 8px; right: 8px; display: flex; gap: 4px; opacity: 0; transition: opacity var(--transition-fast); } .snippet-item:hover .snippet-actions { opacity: 1; } .snippet-actions button { background: var(--bg-elevated); border: 1px solid var(--border-color); border-radius: var(--border-radius-sm); padding: 5px; font-size: 0.8rem; cursor: pointer; color: var(--text-primary); transition: all var(--transition-fast); } .snippet-actions button:hover { background: var(--accent-primary); border-color: var(--accent-primary); color: white; }
+        .content { flex: 1; display: flex; flex-direction: column; overflow: hidden; background-color: var(--bg-primary); }
+        .toolbar { padding: 16px 24px; border-bottom: 1px solid var(--border-color); display: flex; flex-wrap: wrap; gap: 16px; align-items: center; justify-content: space-between; background-color: var(--bg-secondary); } .toolbar-group { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; } .toolbar-button { background-color: var(--bg-tertiary); border: 1px solid var(--border-color); border-radius: var(--border-radius-md); padding: 8px 14px; color: var(--text-primary); font-size: 0.9rem; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; transition: all var(--transition-fast); font-weight: 500; } .toolbar-button:hover { background-color: var(--bg-elevated); border-color: var(--accent-primary); transform: translateY(-2px); box-shadow: var(--shadow-sm); } .toolbar-button.primary { background-color: var(--accent-success); border-color: var(--accent-success); color: white; } .toolbar-button.primary:hover { background-color: var(--accent-success-hover); } .toolbar-button.danger { background-color: var(--accent-danger); border-color: var(--accent-danger); color: white; } .toolbar-button.danger:hover { background-color: #ff6b6b; } .toolbar-select { background-color: var(--bg-tertiary); border: 1px solid var(--border-color); border-radius: var(--border-radius-md); padding: 8px 32px 8px 14px; color: var(--text-primary); font-size: 0.9rem; cursor: pointer; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%238b949e' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 10px center; }
+        .editor-area { flex: 1; display: flex; flex-direction: column; overflow-y: auto; padding: 24px; gap: 24px; } .template-section, .output-section { display: flex; flex-direction: column; gap: 8px; } .section-header { display: flex; justify-content: space-between; align-items: center; } .section-header label { font-weight: 600; color: var(--text-secondary); font-size: 0.95rem; display: flex; align-items: center; gap: 6px; } .section-header .actions { display: flex; gap: 8px; } .section-header .actions button { background: none; border: none; color: var(--text-secondary); cursor: pointer; font-size: 0.95rem; padding: 5px; border-radius: var(--border-radius-sm); transition: all var(--transition-fast); } .section-header .actions button:hover { color: var(--accent-primary); background-color: var(--bg-elevated); }
+        /* CodeMirror customization */
+        .CodeMirror { background-color: var(--bg-tertiary); color: var(--text-primary); border: 1px solid var(--border-color); border-radius: var(--border-radius-lg); height: auto; min-height: 200px; font-family: var(--font-mono); font-size: 14px; } .CodeMirror-gutters { background-color: var(--bg-tertiary); border-right: 1px solid var(--border-color); } .CodeMirror-linenumber { color: var(--text-muted); } .cm-s-dracula .CodeMirror-cursor { border-left-color: var(--accent-primary); } .cm-s-material .CodeMirror-cursor { border-left-color: var(--accent-primary); }
+        .json-input { display: flex; gap: 10px; align-items: center; } .json-input input { flex: 1; background-color: var(--bg-tertiary); border: 1px solid var(--border-color); border-radius: var(--border-radius-md); padding: 12px 14px; color: var(--text-primary); font-family: var(--font-mono); font-size: 0.95rem; transition: all var(--transition-fast); } .json-input input:focus { outline: none; border-color: var(--accent-primary); box-shadow: 0 0 0 3px rgba(88,166,255,0.3); } .json-input button { background-color: var(--bg-elevated); border: 1px solid var(--border-color); border-radius: var(--border-radius-md); padding: 12px 20px; cursor: pointer; color: var(--text-primary); transition: all var(--transition-fast); font-weight: 500; } .json-input button:hover { background-color: var(--bg-secondary); border-color: var(--accent-primary); } .json-error { color: var(--accent-danger); font-size: 0.85rem; margin-top: 4px; display: none; padding-left: 4px; }
+        .output-area { background-color: var(--bg-tertiary); border: 1px solid var(--border-color); border-radius: var(--border-radius-lg); overflow: auto; max-height: 400px; } .output-area pre { margin: 0; padding: 16px; font-family: var(--font-mono); font-size: 14px; line-height: 1.6; white-space: pre-wrap; word-break: break-word; } code.hljs { background: transparent; padding: 0; }
+        .status-bar { padding: 10px 24px; border-top: 1px solid var(--border-color); background-color: var(--bg-secondary); display: flex; justify-content: space-between; align-items: center; font-size: 0.85rem; color: var(--text-muted); } .status-left, .status-right { display: flex; gap: 20px; }
+        .toast-container { position: fixed; bottom: 24px; right: 24px; z-index: 2000; display: flex; flex-direction: column; gap: 10px; } .toast { background-color: var(--bg-elevated); border-left: 4px solid var(--accent-primary); border-radius: var(--border-radius-md); padding: 14px 20px; box-shadow: var(--shadow-md); color: var(--text-primary); font-size: 0.95rem; min-width: 250px; max-width: 350px; animation: slideInRight 0.3s ease, fadeOut 0.3s ease 2.7s forwards; display: flex; align-items: center; gap: 12px; } .toast i { font-size: 1.2rem; } .toast.success { border-left-color: var(--accent-success); } .toast.success i { color: var(--accent-success); } .toast.error { border-left-color: var(--accent-danger); } .toast.error i { color: var(--accent-danger); } .toast.warning { border-left-color: var(--accent-warning); } .toast.warning i { color: var(--accent-warning); } @keyframes slideInRight { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } } @keyframes fadeOut { to { opacity: 0; transform: translateY(-10px); } }
+        .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0,0,0,0.7); display: none; align-items: center; justify-content: center; z-index: 3000; backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); animation: fadeIn 0.2s ease; } @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } } .modal { background-color: var(--bg-secondary); border-radius: var(--border-radius-lg); width: 90%; max-width: 500px; padding: 28px; box-shadow: var(--shadow-lg); animation: scaleIn 0.3s ease; } @keyframes scaleIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } } .modal h3 { margin-bottom: 20px; font-size: 1.4rem; color: var(--text-primary); } .modal input, .modal textarea, .modal select { width: 100%; padding: 12px 14px; margin-bottom: 16px; background-color: var(--bg-tertiary); border: 1px solid var(--border-color); border-radius: var(--border-radius-md); color: var(--text-primary); font-family: var(--font-sans); font-size: 1rem; } .modal input:focus, .modal textarea:focus, .modal select:focus { outline: none; border-color: var(--accent-primary); box-shadow: 0 0 0 3px rgba(88,166,255,0.3); } .modal-actions { display: flex; gap: 12px; justify-content: flex-end; } .modal-actions button { padding: 10px 20px; border-radius: var(--border-radius-md); cursor: pointer; font-weight: 600; transition: all var(--transition-fast); } .modal-actions button:first-child { background: none; border: 1px solid var(--border-color); color: var(--text-primary); } .modal-actions button:first-child:hover { background-color: var(--bg-elevated); border-color: var(--accent-primary); } .modal-actions button:last-child { background-color: var(--accent-success); border: 1px solid var(--accent-success); color: white; } .modal-actions button:last-child:hover { background-color: var(--accent-success-hover); }
+        .keyboard-shortcuts { position: fixed; bottom: 80px; right: 24px; background-color: var(--bg-elevated); border-radius: var(--border-radius-lg); padding: 20px; box-shadow: var(--shadow-lg); display: none; z-index: 1500; min-width: 300px; } .keyboard-shortcuts h4 { margin-bottom: 16px; color: var(--accent-primary); font-size: 1.1rem; } .keyboard-shortcuts table { width: 100%; border-collapse: collapse; } .keyboard-shortcuts td { padding: 8px 12px; border-bottom: 1px solid var(--border-color); } .keyboard-shortcuts tr:last-child td { border-bottom: none; } .keyboard-shortcuts kbd { background-color: var(--bg-tertiary); border-radius: var(--border-radius-sm); padding: 4px 8px; font-family: var(--font-mono); font-size: 0.8rem; border: 1px solid var(--border-light); }
+        .line-numbers { counter-reset: line; } .line-numbers code span.line { counter-increment: line; display: block; } .line-numbers code span.line::before { content: counter(line); display: inline-block; width: 2.5em; padding-right: 1em; text-align: right; color: var(--text-muted); border-right: 1px solid var(--border-color); margin-right: 1em; }
+        @media (max-width: 992px) { .toolbar { flex-direction: column; align-items: stretch; } .toolbar-group { justify-content: center; } } @media (max-width: 768px) { .sidebar { position: absolute; left: 0; top: var(--header-height); bottom: 0; z-index: 90; transform: translateX(-100%); transition: transform var(--transition-normal); } .sidebar.open { transform: translateX(0); } .header-controls { gap: 8px; } .header-btn span { display: none; } .header-btn i { font-size: 1.2rem; } .logo-text { font-size: 1.4rem; } } @media (max-width: 480px) { .editor-area { padding: 16px; } .json-input { flex-direction: column; } .json-input button { width: 100%; } .modal { padding: 20px; } }
+        .spinner { display: inline-block; width: 20px; height: 20px; border: 3px solid var(--bg-elevated); border-top-color: var(--accent-primary); border-radius: 50%; animation: spin 0.6s linear infinite; } @keyframes spin { to { transform: rotate(360deg); } }
+        .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; } [role="button"], button { cursor: pointer; } :focus-visible { outline: 2px solid var(--accent-primary); outline-offset: 2px; }
+        .text-accent { color: var(--accent-primary); } .text-success { color: var(--accent-success); } .text-danger { color: var(--accent-danger); } .text-warning { color: var(--accent-warning); } .bg-accent { background-color: var(--accent-primary); } .bg-success { background-color: var(--accent-success); } .bg-danger { background-color: var(--accent-danger); } .bg-warning { background-color: var(--accent-warning); } .mt-2 { margin-top: 8px; } .mb-2 { margin-bottom: 8px; } .ml-2 { margin-left: 8px; } .mr-2 { margin-right: 8px; } .p-2 { padding: 8px; } .rounded { border-radius: var(--border-radius-md); } .shadow { box-shadow: var(--shadow-sm); } .w-100 { width: 100%; } .d-flex { display: flex; } .align-center { align-items: center; } .justify-between { justify-content: space-between; } .gap-2 { gap: 8px; } .gap-4 { gap: 16px; }
+    </style>
+</head>
+<body>
+    <div class="app">
+        <!-- Header (unchanged) -->
+        <header class="app-header">
+            <div class="logo-area">
+                <i class="fas fa-code logo-icon"></i>
+                <span class="logo-text">SnippetForge</span>
+                <span class="logo-badge">Enterprise</span>
+            </div>
+            <div class="header-controls">
+                <select class="header-select" id="themeSelector">
+                    <option value="dark">🌙 Dark</option>
+                    <option value="light">☀️ Light</option>
+                    <option value="monokai">🎨 Monokai</option>
+                    <option value="github">🐙 GitHub</option>
+                </select>
+                <select class="header-select" id="fontSizeSelector">
+                    <option value="12px">12px</option>
+                    <option value="14px" selected>14px</option>
+                    <option value="16px">16px</option>
+                    <option value="18px">18px</option>
+                    <option value="20px">20px</option>
+                </select>
+                <button class="header-btn" id="helpBtn"><i class="fas fa-question-circle"></i><span>Help</span></button>
+                <button class="header-btn" id="userBtn"><i class="fas fa-user-circle"></i><span>Profile</span></button>
+            </div>
+        </header>
+
+        <div class="app-main">
+            <!-- Sidebar (added collections filter) -->
+            <aside class="sidebar" id="sidebar">
+                <div class="sidebar-header">
+                    <h3><i class="fas fa-book"></i> Snippet Library</h3>
+                    <button class="sidebar-toggle" id="sidebarToggle"><i class="fas fa-chevron-left"></i></button>
+                </div>
+                <div class="sidebar-content">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="searchInput" placeholder="Search snippets...">
+                    </div>
+                    <!-- Collections filter (new) -->
+                    <div class="filter-section">
+                        <div class="filter-title"><i class="fas fa-folder"></i> Collections</div>
+                        <div class="tag-list" id="collectionFilterList"></div>
+                    </div>
+                    <div class="filter-section">
+                        <div class="filter-title"><i class="fas fa-tags"></i> Tags</div>
+                        <div class="tag-list" id="tagList"></div>
+                    </div>
+                    <div class="filter-section">
+                        <div class="filter-title"><i class="fas fa-language"></i> Languages</div>
+                        <div class="tag-list" id="languageFilterList"></div>
+                    </div>
+                    <div class="snippet-list" id="snippetList"></div>
+                </div>
+            </aside>
+
+            <main class="content">
+                <div class="toolbar">
+                    <div class="toolbar-group">
+                        <button class="toolbar-button primary" id="generateBtn"><i class="fas fa-play"></i> Generate</button>
+                        <button class="toolbar-button" id="copyBtn"><i class="far fa-copy"></i> Copy</button>
+                        <button class="toolbar-button" id="saveSnippetBtn"><i class="fas fa-save"></i> Save</button>
+                        <button class="toolbar-button" id="downloadBtn"><i class="fas fa-download"></i> Download</button>
+                        <button class="toolbar-button" id="shareBtn"><i class="fas fa-share-alt"></i> Share</button>
+                        <button class="toolbar-button" id="executeBtn"><i class="fas fa-terminal"></i> Execute</button>
+                        <button class="toolbar-button" id="statsBtn"><i class="fas fa-chart-bar"></i> Stats</button>
+                        <!-- Live preview toggle (enhancement) -->
+                        <button class="toolbar-button" id="livePreviewToggle"><i class="fas fa-eye"></i> Live: Off</button>
+                    </div>
+                    <div class="toolbar-group">
+                        <select class="toolbar-select" id="languageSelect">
+                            <option value="python">Python</option>
+                            <option value="javascript">JavaScript</option>
+                            <option value="java">Java</option>
+                            <option value="cpp">C++</option>
+                            <option value="csharp">C#</option>
+                            <option value="ruby">Ruby</option>
+                            <option value="go">Go</option>
+                            <option value="rust">Rust</option>
+                            <option value="php">PHP</option>
+                            <option value="html">HTML</option>
+                            <option value="css">CSS</option>
+                            <option value="sql">SQL</option>
+                            <option value="bash">Bash</option>
+                            <option value="typescript">TypeScript</option>
+                            <option value="swift">Swift</option>
+                            <option value="kotlin">Kotlin</option>
+                        </select>
+                        <select class="toolbar-select" id="highlightThemeSelect">
+                            <option value="atom-one-dark">Dark</option>
+                            <option value="atom-one-light">Light</option>
+                            <option value="monokai">Monokai</option>
+                            <option value="github">GitHub</option>
+                            <option value="vs2015">VS Code</option>
+                            <option value="solarized-dark">Solarized</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="editor-area">
+                    <!-- Template editor replaced by CodeMirror -->
+                    <div class="template-section">
+                        <div class="section-header">
+                            <label for="templateEditor"><i class="fas fa-pencil-alt"></i> Template (Handlebars + {var})</label>
+                            <div class="actions">
+                                <button id="undoBtn" title="Undo (Ctrl+Z)"><i class="fas fa-undo"></i></button>
+                                <button id="redoBtn" title="Redo (Ctrl+Y)"><i class="fas fa-redo"></i></button>
+                                <button id="clearTemplateBtn" title="Clear template"><i class="fas fa-trash-alt"></i></button>
+                                <button id="formatTemplateBtn" title="Format code"><i class="fas fa-indent"></i></button>
+                            </div>
+                        </div>
+                        <!-- Textarea replaced by CodeMirror (keep id for compatibility) -->
+                        <textarea id="templateEditor" class="template-editor" spellcheck="false" placeholder="def greet({name}):\n    print(f'Hello, {name}!')">def greet({name}):
+    print(f"Hello, {name}!")</textarea>
+                    </div>
+
+                    <!-- JSON values with web worker validation -->
+                    <div class="template-section">
+                        <div class="section-header">
+                            <label for="jsonInput"><i class="fas fa-brackets-curly"></i> Values (JSON)</label>
+                            <div class="actions">
+                                <button id="formatJsonBtn" title="Format JSON"><i class="fas fa-magic"></i></button>
+                                <button id="clearJsonBtn" title="Clear JSON"><i class="fas fa-times"></i></button>
+                            </div>
+                        </div>
+                        <div class="json-input">
+                            <input type="text" id="jsonInput" value='{"name": "John"}' placeholder='{"name": "John", "age": 30}'>
+                            <button id="validateJsonBtn"><i class="fas fa-check-circle"></i> Validate</button>
+                        </div>
+                        <div class="json-error" id="jsonError"></div>
+                    </div>
+
+                    <!-- Output -->
+                    <div class="output-section">
+                        <div class="section-header">
+                            <label for="outputCode"><i class="fas fa-terminal"></i> Generated Snippet</label>
+                            <div class="actions">
+                                <button id="copyOutputBtn" title="Copy output"><i class="far fa-copy"></i></button>
+                                <button id="lineNumbersToggle" title="Toggle line numbers"><i class="fas fa-list-ol"></i></button>
+                                <button id="wordWrapToggle" title="Toggle word wrap"><i class="fas fa-wrap"></i></button>
+                                <button id="expandOutputBtn" title="Expand output"><i class="fas fa-expand"></i></button>
+                            </div>
+                        </div>
+                        <div class="output-area" id="outputArea">
+                            <pre><code id="outputCode" class="hljs">---</code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="status-bar">
+                    <div class="status-left">
+                        <span id="statusText"><i class="fas fa-circle" style="color: var(--accent-success);"></i> Ready</span>
+                        <span id="cursorPosition"><i class="fas fa-cursor"></i> Ln 1, Col 1</span>
+                        <span id="wordCount"><i class="fas fa-file-word"></i> 0 words</span>
+                    </div>
+                    <div class="status-right">
+                        <span><i class="fas fa-code-branch"></i> v3.0</span>
+                        <span><i class="fas fa-database"></i> <span id="snippetCount">0</span> snippets</span>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Toast container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Modal for save/share (added collection field) -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal" id="modal">
+            <h3 id="modalTitle">Save Snippet</h3>
+            <input type="text" id="modalInput" placeholder="Snippet name *">
+            <textarea id="modalTextarea" placeholder="Description (optional)" rows="2"></textarea>
+            <input type="text" id="modalCollection" placeholder="Collection (e.g. Personal, Work)" value="General">
+            <div class="modal-actions">
+                <button id="modalCancel">Cancel</button>
+                <button id="modalConfirm" class="toolbar-button primary">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Keyboard shortcuts panel -->
+    <div class="keyboard-shortcuts" id="shortcutsPanel">
+        <h4><i class="fas fa-keyboard"></i> Keyboard Shortcuts</h4>
+        <table>
+            <tr><td><kbd>Ctrl</kbd>+<kbd>Enter</kbd></td><td>Generate snippet</td></tr>
+            <tr><td><kbd>Ctrl</kbd>+<kbd>S</kbd></td><td>Save snippet</td></tr>
+            <tr><td><kbd>Ctrl</kbd>+<kbd>C</kbd></td><td>Copy output</td></tr>
+            <tr><td><kbd>Ctrl</kbd>+<kbd>Z</kbd></td><td>Undo</td></tr>
+            <tr><td><kbd>Ctrl</kbd>+<kbd>Y</kbd></td><td>Redo</td></tr>
+            <tr><td><kbd>Ctrl</kbd>+<kbd>F</kbd></td><td>Focus search</td></tr>
+            <tr><td><kbd>Ctrl</kbd>+<kbd>D</kbd></td><td>Download snippet</td></tr>
+            <tr><td><kbd>Ctrl</kbd>+<kbd>E</kbd></td><td>Execute (JS only)</td></tr>
+            <tr><td><kbd>Ctrl</kbd>+<kbd>L</kbd></td><td>Toggle line numbers</td></tr>
+            <tr><td><kbd>Ctrl</kbd>+<kbd>K</kbd></td><td>Clear template</td></tr>
+        </table>
+    </div>
+
+    <!-- Statistics modal -->
+    <div class="modal-overlay" id="statsModal">
+        <div class="modal" style="max-width: 600px;">
+            <h3><i class="fas fa-chart-bar"></i> Snippet Statistics</h3>
+            <div style="margin: 20px 0;">
+                <canvas id="statsChart" width="500" height="300"></canvas>
+            </div>
+            <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
+                <div><strong>Total snippets:</strong> <span id="totalSnippets">0</span></div>
+                <div><strong>Languages:</strong> <span id="totalLanguages">0</span></div>
+                <div><strong>Tags:</strong> <span id="totalTags">0</span></div>
+                <div><strong>Collections:</strong> <span id="totalCollections">0</span></div>
+            </div>
+            <div class="modal-actions">
+                <button id="closeStatsBtn">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            "use strict";
+            // ---------- Configuration ----------
+            const CONFIG = {
+                MAX_HISTORY: 100,
+                STORAGE_PREFIX: 'snippetforge_',
+                DEFAULT_LANG: 'python',
+                VERSION: '3.0.0'
+            };
+
+            // ---------- Utility Functions ----------
+            const escapeRegExp = (string) => string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+            const utils = {
+                generateId: () => Date.now() + Math.random().toString(36).substr(2, 9) + Math.random().toString(36).substr(2, 5),
+                debounce: (func, wait) => { let timeout; return (...args) => { clearTimeout(timeout); timeout = setTimeout(() => func(...args), wait); }; },
+                throttle: (func, limit) => { let inThrottle; return (...args) => { if (!inThrottle) { func(...args); inThrottle = true; setTimeout(() => inThrottle = false, limit); } }; },
+                escapeHtml: (text) => { const div = document.createElement('div'); div.textContent = text; return div.innerHTML; },
+                showToast: (message, type = 'info', duration = 3000) => {
+                    const toast = document.createElement('div');
+                    toast.className = `toast ${type}`;
+                    toast.innerHTML = `<i class="fas ${type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-circle' : type === 'warning' ? 'fa-exclamation-triangle' : 'fa-info-circle'}"></i> ${message}`;
+                    document.getElementById('toastContainer').appendChild(toast);
+                    setTimeout(() => toast.remove(), duration);
+                },
+                saveToStorage: (key, data) => {
+                    try { localStorage.setItem(CONFIG.STORAGE_PREFIX + key, JSON.stringify(data)); } 
+                    catch { utils.showToast('Storage quota exceeded', 'error'); }
+                },
+                loadFromStorage: (key, defaultValue = null) => {
+                    try { const item = localStorage.getItem(CONFIG.STORAGE_PREFIX + key); return item ? JSON.parse(item) : defaultValue; } 
+                    catch { return defaultValue; }
+                },
+                getLanguageIcon: (lang) => {
+                    const icons = { python: 'fa-python', javascript: 'fa-js', java: 'fa-java', cpp: 'fa-cpp', csharp: 'fa-csharp', ruby: 'fa-ruby', go: 'fa-go', rust: 'fa-rust', php: 'fa-php', html: 'fa-html5', css: 'fa-css3', sql: 'fa-database', bash: 'fa-terminal', typescript: 'fa-code', swift: 'fa-swift', kotlin: 'fa-android' };
+                    return icons[lang] || 'fa-code';
+                },
+                formatJson: (jsonStr) => { try { return JSON.stringify(JSON.parse(jsonStr), null, 2); } catch { return jsonStr; } },
+                wordCount: (text) => text.split(/\s+/).filter(w => w.length > 0).length,
+                updateWordCount: () => {
+                    const text = document.getElementById('outputCode').textContent;
+                    document.getElementById('wordCount').innerHTML = `<i class="fas fa-file-word"></i> ${utils.wordCount(text)} words`;
+                }
+            };
+
+            // ---------- Web Worker for JSON parsing (off main thread) ----------
+            const jsonWorkerBlob = new Blob([`
+                self.onmessage = function(e) {
+                    try {
+                        const result = JSON.parse(e.data);
+                        self.postMessage({ success: true, result: result });
+                    } catch (err) {
+                        self.postMessage({ success: false, error: err.message });
+                    }
+                };
+            `], { type: 'application/javascript' });
+            const jsonWorker = new Worker(URL.createObjectURL(jsonWorkerBlob));
+
+            // ---------- State Management ----------
+            const state = {
+                user: 'default',
+                snippets: [],
+                filteredSnippets: [],
+                selectedSnippetId: null,
+                currentLanguage: CONFIG.DEFAULT_LANG,
+                currentTemplate: '',
+                currentValues: {},
+                history: { past: [], future: [] },
+                searchQuery: '',
+                activeTags: [],
+                activeLanguages: [],
+                activeCollections: [],
+                lineNumbers: false,
+                wordWrap: true,
+                fontSize: '14px',
+                theme: 'dark',
+                highlightTheme: 'atom-one-dark',
+                sidebarOpen: true,
+                statsChart: null,
+                livePreview: false,
+                collections: new Set(), // for filter
+                // CodeMirror instance
+                cm: null
+            };
+
+            // ---------- Snippet Manager (extended with collections) ----------
+            const snippetManager = {
+                loadSnippets() {
+                    let stored = utils.loadFromStorage(`snippets_${state.user}`, []);
+                    if (stored.length === 0) {
+                        stored = [
+                            { id: utils.generateId(), name: 'Greeting Function', language: 'python', template: 'def greet({name}):\n    print(f"Hello, {name}!")', tags: ['function','beginner'], description: '', collection: 'General', createdAt: Date.now(), modifiedAt: Date.now() },
+                            { id: utils.generateId(), name: 'Fetch GET', language: 'javascript', template: 'fetch("{url}")\n    .then(res => res.json())\n    .then(data => { console.log(data); })\n    .catch(err => console.error(err));', tags: ['api','async'], description: '', collection: 'Web', createdAt: Date.now(), modifiedAt: Date.now() },
+                            { id: utils.generateId(), name: 'List Comprehension', language: 'python', template: '[{{expression}} for {{item}} in {{iterable}}]', tags: ['list','comprehension'], description: '', collection: 'Python', createdAt: Date.now(), modifiedAt: Date.now() },
+                            { id: utils.generateId(), name: 'Try/Catch', language: 'javascript', template: 'try {\n    {{try_code}}\n} catch({{error}}) {\n    {{catch_code}}\n}', tags: ['error','handling'], description: '', collection: 'General', createdAt: Date.now(), modifiedAt: Date.now() },
+                            { id: utils.generateId(), name: 'Java Class', language: 'java', template: 'public class {{ClassName}} {\n    {{fields}}\n    public {{ClassName}}({{params}}) {\n        {{constructor}}\n    }\n}', tags: ['class','oop'], description: '', collection: 'Java', createdAt: Date.now(), modifiedAt: Date.now() },
+                            { id: utils.generateId(), name: 'C++ Loop', language: 'cpp', template: 'for (int {{i}} = 0; {{i}} < {{n}}; {{i}}++) {\n    {{body}}\n}', tags: ['loop'], description: '', collection: 'C++', createdAt: Date.now(), modifiedAt: Date.now() },
+                            { id: utils.generateId(), name: 'HTML Template', language: 'html', template: '<!DOCTYPE html>\n<html>\n<head>\n    <title>{{title}}</title>\n</head>\n<body>\n    {{content}}\n</body>\n</html>', tags: ['html','template'], description: '', collection: 'Web', createdAt: Date.now(), modifiedAt: Date.now() },
+                            { id: utils.generateId(), name: 'CSS Flexbox', language: 'css', template: '.{{class}} {\n    display: flex;\n    justify-content: {{justify}};\n    align-items: {{align}};\n}', tags: ['css','flex'], description: '', collection: 'Web', createdAt: Date.now(), modifiedAt: Date.now() },
+                            { id: utils.generateId(), name: 'SQL Select', language: 'sql', template: 'SELECT {{columns}} FROM {{table}} WHERE {{condition}};', tags: ['sql','query'], description: '', collection: 'Database', createdAt: Date.now(), modifiedAt: Date.now() },
+                            { id: utils.generateId(), name: 'Bash Script', language: 'bash', template: '#!/bin/bash\n{{command}}', tags: ['bash','script'], description: '', collection: 'SysAdmin', createdAt: Date.now(), modifiedAt: Date.now() }
+                        ];
+                    }
+                    state.snippets = stored;
+                    this.updateCollections();
+                    this.applyFilters();
+                    document.getElementById('snippetCount').textContent = state.snippets.length;
+                },
+                updateCollections() {
+                    state.collections.clear();
+                    state.snippets.forEach(s => { if (s.collection) state.collections.add(s.collection); });
+                    renderCollectionsFilter();
+                },
+                saveSnippets() { 
+                    utils.saveToStorage(`snippets_${state.user}`, state.snippets);
+                    document.getElementById('snippetCount').textContent = state.snippets.length;
+                    this.updateCollections();
+                },
+                addSnippet(snippet) { 
+                    snippet.id = utils.generateId(); 
+                    snippet.createdAt = Date.now(); 
+                    snippet.modifiedAt = Date.now(); 
+                    if (!snippet.collection) snippet.collection = 'General';
+                    state.snippets.push(snippet); 
+                    this.saveSnippets(); 
+                    this.applyFilters(); 
+                    utils.showToast('Snippet saved', 'success'); 
+                },
+                updateSnippet(id, updates) { 
+                    const index = state.snippets.findIndex(s => s.id === id); 
+                    if (index !== -1) { 
+                        state.snippets[index] = { ...state.snippets[index], ...updates, modifiedAt: Date.now() }; 
+                        this.saveSnippets(); 
+                        this.applyFilters(); 
+                        utils.showToast('Snippet updated', 'success'); 
+                    } 
+                },
+                deleteSnippet(id) { 
+                    state.snippets = state.snippets.filter(s => s.id !== id); 
+                    if (state.selectedSnippetId === id) {
+                        state.selectedSnippetId = null;
+                        state.currentTemplate = '';
+                        if (state.cm) state.cm.setValue('');
+                    }
+                    this.saveSnippets(); 
+                    this.applyFilters(); 
+                    utils.showToast('Snippet deleted', 'info'); 
+                },
+                getSnippet(id) { return state.snippets.find(s => s.id === id); },
+                getAllTags() { const tags = new Set(); state.snippets.forEach(s => s.tags?.forEach(t => tags.add(t))); return Array.from(tags).sort(); },
+                getAllLanguages() { return Array.from(new Set(state.snippets.map(s => s.language))).sort(); },
+                getAllCollections() { return Array.from(state.collections).sort(); },
+                applyFilters() {
+                    let filtered = state.snippets;
+                    if (state.searchQuery) {
+                        const q = state.searchQuery.toLowerCase();
+                        filtered = filtered.filter(s => s.name.toLowerCase().includes(q) || s.template.toLowerCase().includes(q) || (s.description && s.description.toLowerCase().includes(q)));
+                    }
+                    if (state.activeTags.length) filtered = filtered.filter(s => s.tags && state.activeTags.every(tag => s.tags.includes(tag)));
+                    if (state.activeLanguages.length) filtered = filtered.filter(s => state.activeLanguages.includes(s.language));
+                    if (state.activeCollections.length) filtered = filtered.filter(s => state.activeCollections.includes(s.collection));
+                    state.filteredSnippets = filtered;
+                    renderSnippetList();
+                },
+                getStats() {
+                    const langCount = {}; state.snippets.forEach(s => langCount[s.language] = (langCount[s.language] || 0) + 1);
+                    return { total: state.snippets.length, languages: Object.keys(langCount).length, tags: this.getAllTags().length, collections: this.getAllCollections().length, langCount };
+                }
+            };
+
+            // ---------- Render collections filter ----------
+            function renderCollectionsFilter() {
+                const collections = snippetManager.getAllCollections();
+                const container = document.getElementById('collectionFilterList');
+                container.innerHTML = collections.map(c => 
+                    `<span class="tag ${state.activeCollections.includes(c) ? 'active' : ''}" data-collection="${c}">${c}</span>`
+                ).join('');
+                container.querySelectorAll('.tag').forEach(el => {
+                    el.addEventListener('click', () => {
+                        const coll = el.dataset.collection;
+                        if (state.activeCollections.includes(coll)) {
+                            state.activeCollections = state.activeCollections.filter(c => c !== coll);
+                        } else {
+                            state.activeCollections.push(coll);
+                        }
+                        renderCollectionsFilter();
+                        snippetManager.applyFilters();
+                    });
+                });
+            }
+
+            // ---------- CodeMirror Initialization ----------
+            function initCodeMirror() {
+                const textarea = document.getElementById('templateEditor');
+                state.cm = CodeMirror.fromTextArea(textarea, {
+                    lineNumbers: true,
+                    mode: state.currentLanguage,
+                    theme: 'dracula',
+                    indentUnit: 4,
+                    tabSize: 4,
+                    lineWrapping: true,
+                    extraKeys: { "Ctrl-Space": "autocomplete" }
+                });
+                state.cm.on('change', utils.debounce(() => {
+                    state.currentTemplate = state.cm.getValue();
+                    if (state.livePreview) generateSnippet();
+                }, 300));
+                // Cursor position tracking with selectionchange
+                state.cm.on('cursorActivity', () => {
+                    const pos = state.cm.getCursor();
+                    document.getElementById('cursorPosition').innerHTML = `<i class="fas fa-cursor"></i> Ln ${pos.line+1}, Col ${pos.ch+1}`;
+                });
+            }
+
+            // ---------- Generate snippet with Handlebars and escaped regex fallback ----------
+            function generateSnippet() {
+                let template = state.currentTemplate;
+                const values = state.currentValues;
+                try {
+                    // Convert {var} to {{var}} for Handlebars compatibility
+                    template = template.replace(/\{([^}]+)\}/g, '{{$1}}');
+                    // Compile with Handlebars (if template contains {{...}})
+                    if (template.includes('{{')) {
+                        const compiled = Handlebars.compile(template);
+                        template = compiled(values);
+                    } else {
+                        // fallback simple replace with escaped keys
+                        for (let [key, val] of Object.entries(values)) {
+                            const safeKey = escapeRegExp(key);
+                            template = template.replace(new RegExp(`{{${safeKey}}}`, 'g'), String(val));
+                            template = template.replace(new RegExp(`{${safeKey}}`, 'g'), String(val));
+                        }
+                    }
+                    const out = document.getElementById('outputCode');
+                    out.textContent = template;
+                    out.className = `hljs language-${state.currentLanguage}`;
+                    // Use requestAnimationFrame for highlight.js to avoid mobile glitches
+                    requestAnimationFrame(() => {
+                        hljs.highlightElement(out);
+                        if (state.lineNumbers) addLineNumbers();
+                    });
+                    utils.updateWordCount();
+                    document.getElementById('statusText').innerHTML = '<i class="fas fa-circle" style="color: var(--accent-success);"></i> Generated';
+                } catch (e) {
+                    utils.showToast('Generation error: ' + e.message, 'error');
+                }
+            }
+
+            // ---------- Line Numbers ----------
+            function addLineNumbers() {
+                const code = document.getElementById('outputCode');
+                const html = code.innerHTML;
+                const lines = html.split('\n').map(l => `<span class="line">${l}</span>`).join('\n');
+                code.innerHTML = lines;
+                code.parentElement.classList.add('line-numbers');
+            }
+            function removeLineNumbers() {
+                const code = document.getElementById('outputCode');
+                code.innerHTML = code.textContent;
+                code.parentElement.classList.remove('line-numbers');
+            }
+
+            // ---------- Render Functions ----------
+            function renderSnippetList() {
+                const list = document.getElementById('snippetList');
+                list.innerHTML = '';
+                state.filteredSnippets.forEach(s => {
+                    const item = document.createElement('div');
+                    item.className = `snippet-item ${s.id === state.selectedSnippetId ? 'selected' : ''}`;
+                    item.dataset.id = s.id;
+                    item.innerHTML = `
+                        <div class="snippet-name"><i class="fab ${utils.getLanguageIcon(s.language)}"></i> ${utils.escapeHtml(s.name)}</div>
+                        <div class="snippet-language">${s.language} · ${s.collection || 'General'}</div>
+                        ${s.tags?.length ? `<div class="snippet-tags">${s.tags.map(t => `<span>${t}</span>`).join('')}</div>` : ''}
+                        <div class="snippet-actions">
+                            <button class="edit-snippet" data-id="${s.id}" title="Edit"><i class="fas fa-edit"></i></button>
+                            <button class="delete-snippet" data-id="${s.id}" title="Delete"><i class="fas fa-trash"></i></button>
+                            <button class="duplicate-snippet" data-id="${s.id}" title="Duplicate"><i class="fas fa-copy"></i></button>
+                        </div>
+                    `;
+                    item.addEventListener('click', (e) => { if (!e.target.closest('.snippet-actions')) selectSnippet(s.id); });
+                    list.appendChild(item);
+                });
+                document.querySelectorAll('.edit-snippet').forEach(b => b.addEventListener('click', (e) => { e.stopPropagation(); openEditModal(b.dataset.id); }));
+                document.querySelectorAll('.delete-snippet').forEach(b => b.addEventListener('click', (e) => { e.stopPropagation(); if (confirm('Delete this snippet?')) snippetManager.deleteSnippet(b.dataset.id); }));
+                document.querySelectorAll('.duplicate-snippet').forEach(b => b.addEventListener('click', (e) => { e.stopPropagation(); const s = snippetManager.getSnippet(b.dataset.id); if (s) { const dup = { ...s, id: utils.generateId(), name: s.name + ' (copy)', createdAt: Date.now() }; snippetManager.addSnippet(dup); } }));
+            }
+
+            function renderTagsAndLanguages() {
+                const tags = snippetManager.getAllTags();
+                const tagList = document.getElementById('tagList');
+                tagList.innerHTML = tags.map(t => `<span class="tag ${state.activeTags.includes(t) ? 'active' : ''}" data-tag="${t}">${t}</span>`).join('');
+                tagList.querySelectorAll('.tag').forEach(t => t.addEventListener('click', () => {
+                    const tag = t.dataset.tag;
+                    state.activeTags = state.activeTags.includes(tag) ? state.activeTags.filter(tt => tt !== tag) : [...state.activeTags, tag];
+                    renderTagsAndLanguages(); snippetManager.applyFilters();
+                }));
+
+                const langs = snippetManager.getAllLanguages();
+                const langFilter = document.getElementById('languageFilterList');
+                langFilter.innerHTML = langs.map(l => `<span class="tag ${state.activeLanguages.includes(l) ? 'active' : ''}" data-lang="${l}">${l}</span>`).join('');
+                langFilter.querySelectorAll('.tag').forEach(l => l.addEventListener('click', () => {
+                    const lang = l.dataset.lang;
+                    state.activeLanguages = state.activeLanguages.includes(lang) ? state.activeLanguages.filter(ll => ll !== lang) : [...state.activeLanguages, lang];
+                    renderTagsAndLanguages(); snippetManager.applyFilters();
+                }));
+            }
+
+            function selectSnippet(id) {
+                const s = snippetManager.getSnippet(id);
+                if (s) {
+                    state.selectedSnippetId = id;
+                    state.currentLanguage = s.language;
+                    state.currentTemplate = s.template;
+                    document.getElementById('languageSelect').value = s.language;
+                    if (state.cm) state.cm.setValue(s.template);
+                    // set CodeMirror mode
+                    state.cm.setOption('mode', s.language);
+                    renderSnippetList();
+                    historyManager.push({ template: state.currentTemplate, values: state.currentValues });
+                    utils.showToast(`Loaded: ${s.name}`, 'info');
+                }
+            }
+
+            // ---------- History ----------
+            const historyManager = {
+                push(snapshot) { state.history.past.push(snapshot); if (state.history.past.length > CONFIG.MAX_HISTORY) state.history.past.shift(); state.history.future = []; },
+                undo() { if (state.history.past.length === 0) return null; const prev = state.history.past.pop(); state.history.future.push({ template: state.currentTemplate, values: state.currentValues }); return prev; },
+                redo() { if (state.history.future.length === 0) return null; const next = state.history.future.pop(); state.history.past.push({ template: state.currentTemplate, values: state.currentValues }); return next; }
+            };
+
+            // ---------- Modal ----------
+            function openSaveModal() {
+                document.getElementById('modalTitle').textContent = state.selectedSnippetId ? 'Edit Snippet' : 'Save Snippet';
+                const s = state.selectedSnippetId ? snippetManager.getSnippet(state.selectedSnippetId) : null;
+                document.getElementById('modalInput').value = s ? s.name : '';
+                document.getElementById('modalTextarea').value = s ? s.description || '' : '';
+                document.getElementById('modalCollection').value = s ? s.collection || 'General' : 'General';
+                document.getElementById('modalOverlay').style.display = 'flex';
+            }
+            function openEditModal(id) { state.selectedSnippetId = id; openSaveModal(); }
+
+            // ---------- Statistics Chart ----------
+            function showStats() {
+                const stats = snippetManager.getStats();
+                document.getElementById('totalSnippets').textContent = stats.total;
+                document.getElementById('totalLanguages').textContent = stats.languages;
+                document.getElementById('totalTags').textContent = stats.tags;
+                document.getElementById('totalCollections').textContent = stats.collections;
+
+                const ctx = document.getElementById('statsChart').getContext('2d');
+                if (state.statsChart) state.statsChart.destroy();
+
+                const languages = Object.keys(stats.langCount);
+                const counts = Object.values(stats.langCount);
+
+                state.statsChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: { labels: languages, datasets: [{ label: 'Snippets per language', data: counts, backgroundColor: 'rgba(88, 166, 255, 0.6)', borderColor: 'rgba(88, 166, 255, 1)', borderWidth: 1 }] },
+                    options: { scales: { y: { beginAtZero: true } }, plugins: { legend: { display: false } } }
+                });
+                document.getElementById('statsModal').style.display = 'flex';
+            }
+
+            // ---------- Live Preview ----------
+            function toggleLivePreview() {
+                state.livePreview = !state.livePreview;
+                document.getElementById('livePreviewToggle').innerHTML = `<i class="fas fa-eye"></i> Live: ${state.livePreview ? 'On' : 'Off'}`;
+                if (state.livePreview) generateSnippet();
+            }
+
+            // ---------- JSON Worker handling ----------
+            function setupJsonWorker() {
+                const jsonInput = document.getElementById('jsonInput');
+                jsonInput.addEventListener('input', utils.debounce(() => {
+                    const jsonStr = jsonInput.value;
+                    jsonWorker.postMessage(jsonStr);
+                }, 500));
+
+                jsonWorker.onmessage = (e) => {
+                    if (e.data.success) {
+                        state.currentValues = e.data.result;
+                        document.getElementById('jsonError').style.display = 'none';
+                        if (state.livePreview) generateSnippet();
+                    } else {
+                        document.getElementById('jsonError').style.display = 'block';
+                        document.getElementById('jsonError').textContent = 'Invalid JSON: ' + e.data.error;
+                    }
+                };
+            }
+
+            // ---------- Event Listeners (extended) ----------
+            function initEventListeners() {
+                // Theme, font size, sidebar toggle (same as before)
+                document.getElementById('themeSelector').addEventListener('change', (e) => {
+                    const theme = e.target.value;
+                    document.body.className = theme === 'light' ? 'light-mode' : '';
+                    const map = { dark: 'atom-one-dark', light: 'atom-one-light', monokai: 'monokai', github: 'github' };
+                    document.getElementById('highlight-theme').href = `https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/${map[theme]}.min.css`;
+                    utils.saveToStorage('theme', theme);
+                });
+
+                document.getElementById('fontSizeSelector').addEventListener('change', (e) => {
+                    state.fontSize = e.target.value;
+                    document.querySelector('.CodeMirror').style.fontSize = state.fontSize;
+                    document.querySelector('.output-area pre').style.fontSize = state.fontSize;
+                });
+
+                document.getElementById('sidebarToggle').addEventListener('click', () => {
+                    state.sidebarOpen = !state.sidebarOpen;
+                    document.getElementById('sidebar').classList.toggle('collapsed', !state.sidebarOpen);
+                });
+
+                document.getElementById('languageSelect').addEventListener('change', (e) => { 
+                    state.currentLanguage = e.target.value;
+                    if (state.cm) state.cm.setOption('mode', state.currentLanguage);
+                    if (state.livePreview) generateSnippet();
+                });
+
+                // Generate button
+                document.getElementById('generateBtn').addEventListener('click', generateSnippet);
+
+                // Copy buttons
+                document.getElementById('copyBtn').addEventListener('click', () => {
+                    navigator.clipboard.writeText(document.getElementById('outputCode').textContent)
+                        .then(() => utils.showToast('Copied!', 'success'))
+                        .catch(() => utils.showToast('Copy failed', 'error'));
+                });
+                document.getElementById('copyOutputBtn').addEventListener('click', () => {
+                    navigator.clipboard.writeText(document.getElementById('outputCode').textContent)
+                        .then(() => utils.showToast('Copied!', 'success'))
+                        .catch(() => utils.showToast('Copy failed', 'error'));
+                });
+
+                // Save
+                document.getElementById('saveSnippetBtn').addEventListener('click', openSaveModal);
+
+                // Download
+                document.getElementById('downloadBtn').addEventListener('click', () => {
+                    const blob = new Blob([document.getElementById('outputCode').textContent], { type: 'text/plain' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `snippet.${state.currentLanguage}`;
+                    a.click();
+                    URL.revokeObjectURL(url);
+                });
+
+                // Share
+                document.getElementById('shareBtn').addEventListener('click', () => {
+                    const data = { template: state.currentTemplate, values: state.currentValues, language: state.currentLanguage };
+                    const url = `${window.location.origin}${window.location.pathname}?share=${btoa(JSON.stringify(data))}`;
+                    navigator.clipboard.writeText(url).then(() => utils.showToast('Share URL copied!', 'success'));
+                });
+
+                // Execute (JS only)
+                document.getElementById('executeBtn').addEventListener('click', () => {
+                    if (state.currentLanguage === 'javascript') {
+                        try { const func = new Function(state.currentTemplate); const result = func(); utils.showToast(`Executed, result: ${result}`, 'info'); } 
+                        catch (e) { utils.showToast(`Error: ${e.message}`, 'error'); }
+                    } else { utils.showToast('Execution only for JavaScript', 'warning'); }
+                });
+
+                // Stats
+                document.getElementById('statsBtn').addEventListener('click', showStats);
+
+                // Undo/Redo
+                document.getElementById('undoBtn').addEventListener('click', () => {
+                    const prev = historyManager.undo();
+                    if (prev) { state.currentTemplate = prev.template; state.currentValues = prev.values; state.cm.setValue(prev.template); document.getElementById('jsonInput').value = JSON.stringify(prev.values); generateSnippet(); }
+                });
+                document.getElementById('redoBtn').addEventListener('click', () => {
+                    const next = historyManager.redo();
+                    if (next) { state.currentTemplate = next.template; state.currentValues = next.values; state.cm.setValue(next.template); document.getElementById('jsonInput').value = JSON.stringify(next.values); generateSnippet(); }
+                });
+
+                // Clear template
+                document.getElementById('clearTemplateBtn').addEventListener('click', () => { state.cm.setValue(''); state.currentTemplate = ''; utils.showToast('Template cleared', 'info'); });
+
+                // Format template (simple)
+                document.getElementById('formatTemplateBtn').addEventListener('click', () => {
+                    // use CodeMirror auto-format? For demo just notify
+                    utils.showToast('Formatting not implemented in demo', 'info');
+                });
+
+                document.getElementById('formatJsonBtn').addEventListener('click', () => {
+                    const input = document.getElementById('jsonInput');
+                    input.value = utils.formatJson(input.value);
+                    try { state.currentValues = JSON.parse(input.value); } catch {}
+                });
+                document.getElementById('clearJsonBtn').addEventListener('click', () => {
+                    document.getElementById('jsonInput').value = '{}';
+                    state.currentValues = {};
+                });
+                document.getElementById('validateJsonBtn').addEventListener('click', () => {
+                    try { JSON.parse(document.getElementById('jsonInput').value); utils.showToast('JSON is valid', 'success'); } 
+                    catch { utils.showToast('Invalid JSON', 'error'); }
+                });
+
+                // Line numbers toggle
+                document.getElementById('lineNumbersToggle').addEventListener('click', () => {
+                    state.lineNumbers = !state.lineNumbers;
+                    if (state.lineNumbers) addLineNumbers(); else removeLineNumbers();
+                });
+
+                // Word wrap
+                document.getElementById('wordWrapToggle').addEventListener('click', () => {
+                    const pre = document.querySelector('.output-area pre');
+                    state.wordWrap = !state.wordWrap;
+                    pre.style.whiteSpace = state.wordWrap ? 'pre-wrap' : 'pre';
+                });
+
+                // Expand output
+                document.getElementById('expandOutputBtn').addEventListener('click', () => {
+                    const area = document.getElementById('outputArea');
+                    area.style.maxHeight = area.style.maxHeight === '800px' ? '400px' : '800px';
+                });
+
+                // Search
+                document.getElementById('searchInput').addEventListener('input', utils.debounce((e) => {
+                    state.searchQuery = e.target.value;
+                    snippetManager.applyFilters();
+                }, 300));
+
+                // Help
+                document.getElementById('helpBtn').addEventListener('click', () => {
+                    const p = document.getElementById('shortcutsPanel');
+                    p.style.display = 'block';
+                    setTimeout(() => p.style.display = 'none', 8000);
+                });
+
+                // Live preview toggle
+                document.getElementById('livePreviewToggle').addEventListener('click', toggleLivePreview);
+
+                // Keyboard shortcuts
+                document.addEventListener('keydown', (e) => {
+                    if (e.ctrlKey && e.key === 'Enter') { e.preventDefault(); generateSnippet(); }
+                    if (e.ctrlKey && e.key === 's') { e.preventDefault(); openSaveModal(); }
+                    if (e.ctrlKey && e.key === 'c' && !['INPUT','TEXTAREA'].includes(e.target.tagName)) { e.preventDefault(); document.getElementById('copyBtn').click(); }
+                    if (e.ctrlKey && e.key === 'z') { e.preventDefault(); document.getElementById('undoBtn').click(); }
+                    if (e.ctrlKey && e.key === 'y') { e.preventDefault(); document.getElementById('redoBtn').click(); }
+                    if (e.ctrlKey && e.key === 'f') { e.preventDefault(); document.getElementById('searchInput').focus(); }
+                    if (e.ctrlKey && e.key === 'd') { e.preventDefault(); document.getElementById('downloadBtn').click(); }
+                    if (e.ctrlKey && e.key === 'e') { e.preventDefault(); document.getElementById('executeBtn').click(); }
+                    if (e.ctrlKey && e.key === 'l') { e.preventDefault(); document.getElementById('lineNumbersToggle').click(); }
+                    if (e.ctrlKey && e.key === 'k') { e.preventDefault(); document.getElementById('clearTemplateBtn').click(); }
+                });
+
+                // Modal handlers
+                const modal = document.getElementById('modalOverlay');
+                document.getElementById('modalCancel').addEventListener('click', () => { modal.style.display = 'none'; });
+                document.getElementById('modalConfirm').addEventListener('click', () => {
+                    const name = document.getElementById('modalInput').value;
+                    if (!name) { utils.showToast('Name required', 'error'); return; }
+                    const desc = document.getElementById('modalTextarea').value;
+                    const collection = document.getElementById('modalCollection').value || 'General';
+                    const snippet = { name, description: desc, language: state.currentLanguage, template: state.currentTemplate, tags: [], collection };
+                    if (state.selectedSnippetId) snippetManager.updateSnippet(state.selectedSnippetId, snippet);
+                    else snippetManager.addSnippet(snippet);
+                    modal.style.display = 'none';
+                });
+
+                // Stats modal close
+                document.getElementById('closeStatsBtn').addEventListener('click', () => {
+                    document.getElementById('statsModal').style.display = 'none';
+                });
+
+                // Load shared snippet
+                const urlParams = new URLSearchParams(window.location.search);
+                const shareData = urlParams.get('share');
+                if (shareData) {
+                    try {
+                        const data = JSON.parse(atob(shareData));
+                        state.currentTemplate = data.template;
+                        state.currentValues = data.values;
+                        state.currentLanguage = data.language;
+                        state.cm.setValue(data.template);
+                        document.getElementById('jsonInput').value = JSON.stringify(data.values);
+                        document.getElementById('languageSelect').value = data.language;
+                        generateSnippet();
+                        utils.showToast('Shared snippet loaded', 'success');
+                    } catch { utils.showToast('Invalid share link', 'error'); }
+                }
+            }
+
+            // ---------- Initialization ----------
+            function init() {
+                const savedUser = utils.loadFromStorage('lastUser', 'default');
+                state.user = savedUser;
+                snippetManager.loadSnippets();
+                renderTagsAndLanguages();
+                renderCollectionsFilter();
+
+                initCodeMirror(); // replaces textarea
+                state.currentTemplate = state.cm.getValue();
+                try { state.currentValues = JSON.parse(document.getElementById('jsonInput').value); } catch {}
+
+                const savedTheme = utils.loadFromStorage('theme', 'dark');
+                document.getElementById('themeSelector').value = savedTheme;
+                document.body.className = savedTheme === 'light' ? 'light-mode' : '';
+
+                setupJsonWorker(); // web worker for JSON
+                initEventListeners();
+                generateSnippet();
+                utils.showToast('Welcome to SnippetForge Enterprise', 'info');
+            }
+
+            init();
+        })();
+    </script>
+</body>
+</html>
